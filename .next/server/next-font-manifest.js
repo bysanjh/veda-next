@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/sanjhal.jain/Desktop/veda-next/app/layout\":[\"static/media/b3291d31cfb11329-s.p.woff2\",\"static/media/50a7baa9edcda941-s.p.woff2\",\"static/media/02743a8d10a3d186-s.p.woff2\",\"static/media/1e41be92c43b3255-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
