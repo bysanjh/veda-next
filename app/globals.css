@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #0a0a12;
+  font-family: var(--font-roboto), sans-serif;
+}
+
+/* Scrollbar hide utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Spinning loader */
+@keyframes spin-loader {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader-spin {
+  animation: spin-loader 1s linear infinite;
+}
+
+/* Message slide-in animations */
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-overlay {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.msg-left {
+  animation: slide-in-left 0.3s ease-out forwards;
+}
+
+.msg-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+.msg-fade-up {
+  animation: fade-in-up 0.3s ease-out forwards;
+}
+
+.overlay-slide-up {
+  animation: slide-up-overlay 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* Tarot card fan - swipeable */
+.card-fan-container {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+.card-fan-container:active {
+  cursor: grabbing;
+}
