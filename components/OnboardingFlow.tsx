@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import ScrollWheelPicker from '@/components/ScrollWheelPicker'
 
 interface BirthProfile {
   name: string
@@ -31,6 +32,7 @@ const YEARS = Array.from({ length: 100 }, (_, i) => String(2006 - i))
 const HOURS   = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'))
 const MINUTES = Array.from({ length: 60 }, (_, i) => String(i).padStart(2, '0'))
 const AMPMS   = ['AM', 'PM']
+const MINUTES_5 = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'))
 
 const CITIES = [
   'New York, United States','Los Angeles, United States','Chicago, United States',
@@ -237,7 +239,7 @@ export default function OnboardingFlow({ onComplete, onClose }: OnboardingFlowPr
   const [dobDay, setDobDay]           = useState(DAYS[0])
   const [dobYear, setDobYear]         = useState(YEARS[25])
   const [tobHour, setTobHour]         = useState(HOURS[0])
-  const [tobMin, setTobMin]           = useState(MINUTES[0])
+  const [tobMin, setTobMin]           = useState(MINUTES_5[0])
   const [tobAmpm, setTobAmpm]         = useState(AMPMS[0])
   const [skipTob, setSkipTob]         = useState(false)
   const [location, setLocation]       = useState('')
@@ -417,17 +419,25 @@ export default function OnboardingFlow({ onComplete, onClose }: OnboardingFlowPr
               <CloseBtn onClick={doClose} />
             </div>
             <PickerWrapper>
-              <div style={{ display: 'flex', gap: 27, overflow: 'hidden' }}>
-                <div style={{ flex: 1.2, overflow: 'hidden' }}>
-                  <ScrollPicker items={HOURS} onChange={setTobHour} align="right" />
-                </div>
-                <div style={{ flex: 1.2, overflow: 'hidden' }}>
-                  <ScrollPicker items={MINUTES} onChange={setTobMin} />
-                </div>
-                <div style={{ flex: 0.75, overflow: 'hidden' }}>
-                  <ScrollPicker items={AMPMS} onChange={setTobAmpm} />
-                </div>
-              </div>
+              <ScrollWheelPicker
+                columns={[
+                  {
+                    values: HOURS,
+                    selected: Math.max(0, HOURS.indexOf(tobHour)),
+                    onChange: (i) => setTobHour(HOURS[i] ?? HOURS[0]),
+                  },
+                  {
+                    values: MINUTES_5,
+                    selected: Math.max(0, MINUTES_5.indexOf(tobMin)),
+                    onChange: (i) => setTobMin(MINUTES_5[i] ?? MINUTES_5[0]),
+                  },
+                  {
+                    values: AMPMS,
+                    selected: Math.max(0, AMPMS.indexOf(tobAmpm)),
+                    onChange: (i) => setTobAmpm(AMPMS[i] ?? AMPMS[0]),
+                  },
+                ]}
+              />
             </PickerWrapper>
             <button
               onClick={() => { setSkipTob(true); next() }}
