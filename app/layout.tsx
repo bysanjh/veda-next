@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Roboto, Khand } from 'next/font/google'
+import { Roboto, Khand, DM_Sans } from 'next/font/google'
 import './globals.css'
 
 const roboto = Roboto({
@@ -17,6 +17,13 @@ const khand = Khand({
   display: 'swap',
 })
 
+const dmSans = DM_Sans({
+  weight: ['400', '500'],
+  subsets: ['latin'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
   title: 'Veda — AI Astrology',
   description: 'Your daily spiritual guide',
@@ -31,8 +38,19 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${roboto.variable} ${khand.variable} bg-[#0a0a12]`}>
-        {children}
+      <body className={`${roboto.variable} ${khand.variable} ${dmSans.variable}`}>
+        <div
+          style={{
+            maxWidth: '402px',
+            margin: '0 auto',
+            minHeight: '100vh',
+            position: 'relative',
+            overflow: 'hidden',
+            background: '#0a0c1a',
+          }}
+        >
+          {children}
+        </div>
       </body>
     </html>
   )

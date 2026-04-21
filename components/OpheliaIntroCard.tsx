@@ -58,7 +58,7 @@ export default function OpheliaIntroCard() {
         {/* Toggle */}
         <div className="flex flex-col items-end gap-[4px]">
           <div className="relative w-[56px] h-[32px]">
-            <Image src={ASSETS.toggleOn} alt="toggle" fill unoptimized className="object-contain" />
+            <Image src={ASSETS.toggleGroup} alt="toggle" fill unoptimized className="object-contain" />
           </div>
           <p
             className="font-roboto font-normal text-white text-[12px] m-0"

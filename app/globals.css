@@ -10,7 +10,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #0a0a12;
+  background: #000;
   font-family: var(--font-roboto), sans-serif;
 }
 
@@ -23,14 +23,30 @@ body {
   scrollbar-width: none;
 }
 
-/* Spinning loader */
-@keyframes spin-loader {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Typing dots */
+@keyframes typing-dot {
+  0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-4px); }
 }
 
-.loader-spin {
-  animation: spin-loader 1s linear infinite;
+.typing-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Stagger fade-in for chat messages */
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.msg-in {
+  animation: msg-in 0.3s ease-out forwards;
 }
 
 /* Message slide-in animations */
@@ -91,6 +107,31 @@ body {
 .overlay-slide-up {
   animation: slide-up-overlay 0.4s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
+
+/* Onboarding sheet */
+@keyframes ob-sheet-enter {
+  from { transform: translateY(100%); opacity: 0.6; }
+  to   { transform: translateY(0);    opacity: 1;   }
+}
+@keyframes ob-step-enter {
+  from { transform: translateY(28px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes ob-step-exit {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(-20px); opacity: 0; }
+}
+@keyframes spin-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.ob-sheet-enter { animation: ob-sheet-enter 350ms cubic-bezier(0.32, 0.72, 0, 1) both; }
+.ob-step-enter  { animation: ob-step-enter  350ms cubic-bezier(0.32, 0.72, 0, 1) both; }
+.ob-step-exit   { animation: ob-step-exit   280ms ease-in both; }
+.spin-cw        { animation: spin-cw 600ms linear infinite; }
+
+/* Global placeholder style for onboarding inputs */
+.ob-input::placeholder { color: rgba(255,255,255,0.62); }
 
 /* Tarot card fan - swipeable */
 .card-fan-container {

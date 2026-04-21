@@ -3,17 +3,20 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Header from '@/components/Header'
 import StarfieldBg from '@/components/StarfieldBg'
 import ChatBar from '@/components/ChatBar'
+import ChatBarWithReturn from '@/components/ChatBarWithReturn'
 import HomeCards from '@/components/HomeCards'
 import UserBubble from '@/components/UserBubble'
 import VedaMessage from '@/components/VedaMessage'
 import OpheliaMessage from '@/components/OpheliaMessage'
-import OpheliaIntroCard from '@/components/OpheliaIntroCard'
 import OpheliaEntered from '@/components/OpheliaEntered'
+import OpheliaIntroOverlay from '@/components/OpheliaIntroOverlay'
 import ReadingChoiceCards from '@/components/ReadingChoiceCards'
 import CardSelectionOverlay from '@/components/CardSelectionOverlay'
 import CardRevealResult from '@/components/CardRevealResult'
-import ThreeCardResultOverlay from '@/components/ThreeCardResultOverlay'
+import CardRevealOverlay from '@/components/CardRevealOverlay'
 import HoroscopeContent from '@/components/HoroscopeContent'
+import LoginScreen from '@/components/LoginScreen'
+import OnboardingFlow from '@/components/OnboardingFlow'
 
 type Screen =
   | 'home'
@@ -43,6 +46,7 @@ interface Message {
   text?: string
   reading?: string
   onFollowUp?: (q: string) => void
+  onViewReading?: () => void
 }
 
 async function streamVedaResponse(
@@ -83,14 +87,18 @@ export default function VedaPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [cardMode, setCardMode] = useState<'yes_no' | 'three_card'>('yes_no')
-  const [selectedSlots, setSelectedSlots] = useState<number[]>([])
+  const [showOpheliaOverlay, setShowOpheliaOverlay] = useState(false)
   const [showCardOverlay, setShowCardOverlay] = useState(false)
-  const [showThreeCardResult, setShowThreeCardResult] = useState(false)
+  const [showCardReveal, setShowCardReveal] = useState(false)
+  const [revealText, setRevealText] = useState('')
+  const [revealStreaming, setRevealStreaming] = useState(false)
   const [pendingQuestion, setPendingQuestion] = useState('')
   const [streamingId, setStreamingId] = useState<string | null>(null)
   const [streamingText, setStreamingText] = useState('')
   const scrollRef = useRef<HTMLDivElement>(null)
   const msgCounter = useRef(0)
+
+  const [onboardingState, setOnboardingState] = useState<'login' | 'onboarding' | 'done'>('login')
 
   const nextId = () => {
     msgCounter.current += 1
@@ -163,7 +171,6 @@ export default function VedaPage() {
         { id: opMsgId, type: 'ophelia_msg', text: 'Got it. Now choose your card from the deck below.' },
       ])
       setCardMode('yes_no')
-      setSelectedSlots([])
       setShowCardOverlay(true)
       setScreen('yes_no_cards')
       return
@@ -178,7 +185,6 @@ export default function VedaPage() {
         { id: opMsgId, type: 'ophelia_msg', text: 'Let the cards guide you. Select three from the deck.' },
       ])
       setCardMode('three_card')
-      setSelectedSlots([])
       setShowCardOverlay(true)
       setScreen('three_card_cards')
       return
@@ -200,102 +206,158 @@ export default function VedaPage() {
     askVeda(q, () => {})
   }
 
+  function staggerAdd(items: Omit<Message, 'id'>[], delayMs = 400) {
+    items.forEach((item, i) => {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, { ...item, id: nextId() }])
+      }, i * delayMs)
+    })
+  }
+
   function handleTarotPill() {
-    addMessage({ type: 'user', text: 'I want a Tarot reading' })
+    addMessage({ type: 'user', text: 'Tarot Reading' })
     setScreen('tarot_loading')
-    setTimeout(() => {
-      addMessage({ type: 'ophelia_entered' })
-      addMessage({ type: 'ophelia_intro' })
-      addMessage({
-        type: 'ophelia_msg',
-        text: "Hi, I'm Ophelia \u2014 your tarot reader. What kind of reading would you like today?",
-      })
-      addMessage({ type: 'reading_choice' })
-      setScreen('reading_choice')
-    }, 1200)
+    askVeda('Tarot Reading', () => {
+      setShowOpheliaOverlay(true)
+    })
   }
 
   function handleHoroscopePill() {
-    addMessage({ type: 'user', text: 'Show me my horoscope' })
-    askVeda(
-      'Give me a detailed horoscope reading for today. Include cosmic influences and actionable guidance.',
-      (reading) => {
-        addMessage({
-          type: 'horoscope',
-          reading,
-          onFollowUp: (q) => {
-            addMessage({ type: 'user', text: q })
-            askVeda(q, () => {})
-          },
-        })
+    addMessage({ type: 'user', text: 'Daily horoscope' })
+    setScreen('horoscope')
+    const loadingId = nextId()
+    setMessages((prev) => [...prev, { id: loadingId, type: 'veda_loading' }])
+    setStreamingId(loadingId)
+    setStreamingText('')
+    const history = [{ role: 'user' as const, content: 'Give me a horoscope reading for today for Sanjhal (Pisces Sun, Taurus Moon, Virgo Rising). Reference the New Moon conjunct Sun, Jupiter trine Sun, and Saturn square Mars transits. Keep it to 3-4 sentences.' }]
+    let accumulated = ''
+    streamVedaResponse(
+      history,
+      (chunk) => { accumulated += chunk; setStreamingText(accumulated) },
+      () => {
+        setStreamingId(null)
+        setStreamingText('')
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === loadingId
+              ? {
+                  ...m,
+                  type: 'horoscope' as const,
+                  reading: accumulated,
+                  onFollowUp: (q: string) => {
+                    addMessage({ type: 'user', text: q })
+                    askVeda(q, () => {})
+                  },
+                }
+              : m
+          )
+        )
       }
     )
-    setScreen('horoscope')
   }
 
   function handleYesNo() {
-    addMessage({
-      type: 'ophelia_msg',
-      text: "What's your yes-or-no question? Focus on one specific thing.",
-    })
-    setScreen('yes_no_question')
+    setShowOpheliaOverlay(false)
+    staggerAdd([
+      { type: 'ophelia_entered' },
+      {
+        type: 'ophelia_msg',
+        text: "A Yes / No reading \u2014 one card, one clear answer.\n\nBefore we draw, what does your heart need clarity on? Take a breath and write it out.",
+      },
+    ], 450)
+    setTimeout(() => setScreen('yes_no_question'), 500)
   }
 
   function handleThreeCard() {
-    addMessage({
-      type: 'ophelia_msg',
-      text: 'What area of your life would you like to explore through the past, present, and future?',
-    })
-    setScreen('three_card_question')
+    setShowOpheliaOverlay(false)
+    staggerAdd([
+      { type: 'ophelia_entered' },
+      {
+        type: 'ophelia_msg',
+        text: "Hello Sanjhal!\n\nI will be spreading the cards for you today. What area of your life would you like to explore through the past, present, and future?",
+      },
+    ], 450)
+    setTimeout(() => setScreen('three_card_question'), 500)
   }
 
-  function handleCardSelected(slotIndex?: number) {
-    if (cardMode === 'yes_no') {
-      setShowCardOverlay(false)
-      askVeda(
-        `Do a yes/no tarot card reading for this question: "${pendingQuestion}". The Moon card was drawn. Give an evocative reading.`,
-        (reading) => {
-          addMessage({
-            type: 'card_reveal',
-            reading,
-            onFollowUp: (q) => {
-              addMessage({ type: 'user', text: q })
-              askVeda(q, () => {})
-            },
-          })
-          setScreen('card_revealed')
-        }
-      )
-    } else {
-      const next = slotIndex ?? 0
-      const newSlots = [...selectedSlots, next]
-      setSelectedSlots(newSlots)
-      if (newSlots.length >= 3) {
-        setShowCardOverlay(false)
-        setShowThreeCardResult(true)
-        askVeda(
-          `Do a three-card past/present/future tarot reading for: "${pendingQuestion}". Cards drawn: Moon (Past), Empress (Present), Tower (Future). Give a summarized narrative reading.`,
-          (_reading) => {
-            setScreen('three_card_result')
-          }
-        )
-      }
-    }
+  function handleCardSelected() {
+    // Start streaming — CardSelectionOverlay handles all phase transitions internally
+    setRevealText('')
+    setRevealStreaming(true)
+    const prompt = cardMode === 'yes_no'
+      ? `Do a yes/no tarot card reading for this question: "${pendingQuestion}". The Moon card was drawn. Give an evocative reading in 3-4 sentences.`
+      : `Do a three-card past/present/future tarot reading for: "${pendingQuestion}". Cards drawn: Moon (Past), Empress (Present), Tower (Future). Give a summarized narrative reading in 3-4 sentences.`
+    const history = [{ role: 'user' as const, content: prompt }]
+    let accumulated = ''
+    streamVedaResponse(
+      history,
+      (chunk) => { accumulated += chunk; setRevealText(accumulated) },
+      () => setRevealStreaming(false)
+    )
+  }
+
+  function handleCloseReveal() {
+    const reading = revealText
+    setShowCardOverlay(false)
+    setScreen('card_revealed')
+    staggerAdd([
+      { type: 'ophelia_msg', text: "You chose this card for a reason. Here\u2019s what it has to say..." },
+      {
+        type: 'card_reveal',
+        reading,
+        onViewReading: () => {
+          setRevealText(reading)
+          setShowCardReveal(true)
+        },
+        onFollowUp: (q) => {
+          addMessage({ type: 'user', text: q })
+          askVeda(q, () => {})
+        },
+      },
+      { type: 'ophelia_msg', text: "A no doesn\u2019t mean never \u2014 it means not yet, or not like this.\n\nDo you want to dive deeper into your reading?" },
+    ], 400)
+  }
+
+  function handleAnotherReadingFromReveal() {
+    const reading = revealText
+    setShowCardOverlay(false)
+    setScreen('reading_choice')
+    staggerAdd([
+      { type: 'ophelia_msg', text: "You chose this card for a reason. Here\u2019s what it has to say..." },
+      {
+        type: 'card_reveal',
+        reading,
+        onViewReading: () => { setRevealText(reading); setShowCardReveal(true) },
+        onFollowUp: (q: string) => { addMessage({ type: 'user', text: q }); askVeda(q, () => {}) },
+      },
+      {
+        type: 'ophelia_msg',
+        text: "Let\u2019s do another tarot reading.\n\nI will be spreading the cards for you today. Before we get deeper into your reading what type of Tarot card reading you would like to do today?",
+      },
+      { type: 'reading_choice' },
+    ], 450)
   }
 
   function handleAnotherReading() {
-    setShowThreeCardResult(false)
+    setShowCardOverlay(false)
     setScreen('reading_choice')
-    addMessage({
-      type: 'ophelia_msg',
-      text: 'Ready for another reading. What would you like to try?',
-    })
-    addMessage({ type: 'reading_choice' })
+    staggerAdd([
+      {
+        type: 'ophelia_msg',
+        text: "Let\u2019s do another tarot reading.\n\nI will be spreading the cards for you today. Before we get deeper into your reading what type of Tarot card reading you would like to do today?",
+      },
+      { type: 'reading_choice' },
+    ], 450)
   }
 
   function handleFollowUp(q: string) {
     addMessage({ type: 'user', text: q })
     askVeda(q, () => {})
+  }
+
+  function handleReturnToVeda() {
+    setScreen('home')
+    setMessages([])
   }
 
   const chatPlaceholder =
@@ -309,8 +371,8 @@ export default function VedaPage() {
 
   return (
     <div
-      className="relative mx-auto overflow-hidden"
-      style={{ width: 402, height: '100dvh', maxHeight: '100dvh', backgroundColor: '#0a0a12' }}
+      className="relative overflow-hidden"
+      style={{ width: '100%', height: '100dvh', maxHeight: '100dvh', backgroundColor: '#0a0c1a' }}
     >
       <StarfieldBg />
       <Header />
@@ -366,9 +428,6 @@ export default function VedaPage() {
             if (msg.type === 'ophelia_entered') {
               return <OpheliaEntered key={msg.id} />
             }
-            if (msg.type === 'ophelia_intro') {
-              return <OpheliaIntroCard key={msg.id} />
-            }
             if (msg.type === 'reading_choice') {
               return (
                 <ReadingChoiceCards
@@ -384,6 +443,7 @@ export default function VedaPage() {
                   key={msg.id}
                   reading={msg.reading ?? ''}
                   onFollowUp={msg.onFollowUp ?? handleFollowUp}
+                  onViewReading={msg.onViewReading}
                 />
               )
             }
@@ -401,20 +461,44 @@ export default function VedaPage() {
         </div>
       </div>
 
-      {/* Chat bar */}
-      <div className="absolute inset-x-0 bottom-0" style={{ height: 120, zIndex: 20 }}>
-        <ChatBar
-          value={input}
-          onChange={setInput}
-          onSubmit={() => handleSendMessage()}
-          onTarot={handleTarotPill}
-          onHoroscope={handleHoroscopePill}
-          placeholder={chatPlaceholder}
-          disabled={!!streamingId}
-        />
-      </div>
+      {/* Chat bar — shows "Return to Veda" tab in Ophelia/tarot mode */}
+      {screen === 'home' || screen === 'horoscope' ? (
+        <div className="absolute inset-x-0 bottom-0" style={{ height: 120, zIndex: 20 }}>
+          <ChatBar
+            value={input}
+            onChange={setInput}
+            onSubmit={() => handleSendMessage()}
+            onTarot={handleTarotPill}
+            onHoroscope={handleHoroscopePill}
+            placeholder={chatPlaceholder}
+            disabled={!!streamingId}
+          />
+        </div>
+      ) : (
+        <div className="absolute inset-x-0 bottom-0" style={{ height: 132, zIndex: 20 }}>
+          <ChatBarWithReturn
+            value={input}
+            onChange={setInput}
+            onSubmit={() => handleSendMessage()}
+            onTarot={handleTarotPill}
+            onHoroscope={handleHoroscopePill}
+            onReturnToVeda={handleReturnToVeda}
+            placeholder={chatPlaceholder}
+            disabled={!!streamingId}
+          />
+        </div>
+      )}
 
-      {/* Card selection overlay */}
+      {/* Ophelia intro overlay */}
+      {showOpheliaOverlay && (
+        <OpheliaIntroOverlay
+          onClose={() => setShowOpheliaOverlay(false)}
+          onYesNo={handleYesNo}
+          onThreeCard={handleThreeCard}
+        />
+      )}
+
+      {/* Card selection overlay (handles pick → reveal in one sheet) */}
       {showCardOverlay && (
         <CardSelectionOverlay
           mode={cardMode}
@@ -423,23 +507,40 @@ export default function VedaPage() {
             setScreen(cardMode === 'yes_no' ? 'yes_no_question' : 'three_card_question')
           }}
           onCardSelected={handleCardSelected}
-          selectedSlots={selectedSlots}
+          revealText={revealText}
+          revealStreaming={revealStreaming}
+          onRevealClose={handleCloseReveal}
+          onAnotherReading={cardMode === 'yes_no' ? handleAnotherReadingFromReveal : handleAnotherReading}
         />
       )}
 
-      {/* Three card result overlay */}
-      {showThreeCardResult && (
-        <ThreeCardResultOverlay
-          reading={
-            (messages.findLast?.((m) => m.type === 'veda')?.text) ??
-            streamingText ??
-            'Reading loading...'
-          }
-          onClose={() => {
-            setShowThreeCardResult(false)
-            setScreen('card_revealed')
+      {/* View Reading re-opener (compact overlay after closing reveal) */}
+      {showCardReveal && (
+        <CardRevealOverlay
+          reading={revealText}
+          isStreaming={revealStreaming}
+          onClose={() => setShowCardReveal(false)}
+          onAnotherReading={() => {
+            setShowCardReveal(false)
+            setScreen('reading_choice')
+            staggerAdd([
+              { type: 'ophelia_msg', text: 'Ready for another reading. What would you like to try?' },
+              { type: 'reading_choice' },
+            ], 400)
           }}
-          onAnotherReading={handleAnotherReading}
+        />
+      )}
+
+      {/* Login screen (first-time users) */}
+      {onboardingState === 'login' && (
+        <LoginScreen onContinue={() => setOnboardingState('onboarding')} />
+      )}
+
+      {/* Onboarding bottom-sheet (birth chart collection) */}
+      {onboardingState === 'onboarding' && (
+        <OnboardingFlow
+          onComplete={() => setOnboardingState('done')}
+          onClose={() => setOnboardingState('done')}
         />
       )}
     </div>

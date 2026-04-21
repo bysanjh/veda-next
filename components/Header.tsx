@@ -1,39 +1,59 @@
 'use client'
-import Image from 'next/image'
-import { ASSETS } from '@/lib/assets'
 
 export default function Header() {
   return (
-    <div
-      className="absolute top-0 left-0 right-0 z-20 h-[101px]"
-      style={{ backgroundColor: '#101010', borderBottom: '1.072px solid rgba(255,255,255,0.2)' }}
-    >
-      {/* Logo row */}
-      <div className="absolute flex items-center gap-[8.576px] left-[17px] top-[45px] h-[42.88px]">
-        <div className="relative w-[42.88px] h-[42.88px] shrink-0">
-          <Image
-            src={ASSETS.logoBadge}
-            alt="Astrology.com logo badge"
-            fill
-            className="object-contain"
-            unoptimized
-          />
-        </div>
-        <div className="flex items-baseline">
+    <>
+      {/* Main header bar */}
+      <div
+        className="absolute top-0 left-0 right-0 z-20"
+        style={{
+          height: '100.768px',
+          backgroundColor: '#101010',
+          borderBottom: '1.072px solid rgba(255,255,255,0.2)',
+        }}
+      >
+        {/* Hamburger — left */}
+        <button
+          className="absolute flex flex-col justify-center gap-[5px]"
+          style={{ left: 17, top: '50%', transform: 'translateY(-50%)', width: 24, height: 24 }}
+          aria-label="Menu"
+        >
+          <span style={{ display: 'block', height: 2, backgroundColor: 'white', borderRadius: 1 }} />
+          <span style={{ display: 'block', height: 2, backgroundColor: 'white', borderRadius: 1 }} />
+          <span style={{ display: 'block', height: 2, backgroundColor: 'white', borderRadius: 1 }} />
+        </button>
+
+        {/* Logo — centered */}
+        <div
+          className="absolute flex items-baseline"
+          style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+        >
           <span
             className="font-khand font-medium text-white uppercase whitespace-nowrap"
             style={{ fontSize: '25.728px', letterSpacing: '1.029px' }}
           >
-            Astrology
+            ASTROLOGY
           </span>
           <span
-            className="font-khand font-light text-white"
+            className="font-khand font-light text-white whitespace-nowrap"
             style={{ fontSize: '25.728px', letterSpacing: '0.64px' }}
           >
             .com
           </span>
         </div>
       </div>
-    </div>
+
+      {/* Gradient blur strip below header */}
+      <div
+        className="absolute left-0 right-0 z-10 pointer-events-none"
+        style={{
+          top: '100.768px',
+          height: '41.808px',
+          background: 'linear-gradient(to bottom, rgba(1,1,7,0.5), transparent)',
+          backdropFilter: 'blur(2.144px)',
+          WebkitBackdropFilter: 'blur(2.144px)',
+        }}
+      />
+    </>
   )
 }
