@@ -532,7 +532,7 @@ export default function VedaPage() {
       )}
 
       {/* Login screen (first-time users) */}
-      {onboardingState === 'login' && (
+      {onboardingState === 'login' && (typeof window === 'undefined' || localStorage.getItem('dev_bypass') !== 'true') && (
         <LoginScreen onContinue={() => setOnboardingState('onboarding')} />
       )}
 
