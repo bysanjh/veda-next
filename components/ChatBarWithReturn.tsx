@@ -96,7 +96,9 @@ export default function ChatBarWithReturn({
           disabled={disabled}
           style={{
             position: 'absolute',
-            top: 11, left: 14, right: 52,
+            top: active ? '50%' : 11,
+            transform: active ? 'translateY(-50%)' : 'none',
+            left: 14, right: 52,
             background: 'none', border: 'none', outline: 'none',
             fontFamily: 'var(--font-roboto)', fontWeight: 400,
             fontSize: 18,
