@@ -416,7 +416,7 @@ export default function VedaPage() {
   return (
     <div
       className="relative overflow-hidden"
-      style={{ width: '100%', height: '874px', backgroundColor: '#0a0c1a' }}
+      style={{ width: '100%', height: '100%', backgroundColor: '#0a0c1a' }}
     >
       <StarfieldBg />
       <Header />

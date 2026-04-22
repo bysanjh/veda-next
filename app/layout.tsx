@@ -42,10 +42,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${roboto.variable} ${khand.variable} ${dmSans.variable}`}>
         <div
           style={{
+            position: 'fixed',
+            top: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
             width: '402px',
-            height: '874px',
-            margin: '0 auto',
-            position: 'relative',
+            height: '100dvh',
             overflow: 'hidden',
             background: '#0a0c1a',
           }}
