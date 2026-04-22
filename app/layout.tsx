@@ -30,10 +30,11 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  width: '402',
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -46,7 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             top: 0,
             left: '50%',
             transform: 'translateX(-50%)',
-            width: '402px',
+            width: '100%',
+            maxWidth: '402px',
             height: '100dvh',
             overflow: 'hidden',
             background: '#0a0c1a',
