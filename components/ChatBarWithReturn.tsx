@@ -33,7 +33,7 @@ export default function ChatBarWithReturn({
   }
 
   return (
-    <div style={{ position: 'relative', height: 137, width: '100%' }}>
+    <div style={{ position: 'relative', height: active ? 80 : 137, width: '100%', transition: 'height 0.2s ease' }}>
 
       {/* Gray tab — rounded top, bleeds 4px above container */}
       <div style={{
@@ -72,17 +72,17 @@ export default function ChatBarWithReturn({
         </div>
       </button>
 
-      {/* Chat input box — 109px, matching ChatBar */}
+      {/* Chat input box */}
       <div style={{
         position: 'absolute',
         top: 28, left: 0, right: 0,
-        height: 109,
+        height: active ? 52 : 109,
         borderRadius: active ? 17 : 29,
         background: 'linear-gradient(-72.19deg, rgba(42,49,73,0.6) 8.44%, rgba(29,35,54,0.6) 86.36%)',
         border: '1px solid #131725',
         boxShadow: '1px 1px 7.1px 1.3px rgba(61,69,100,0.28)',
         overflow: 'hidden',
-        transition: 'border-radius 0.15s ease',
+        transition: 'height 0.2s ease, border-radius 0.15s ease',
       }}>
 
         {/* Input */}
