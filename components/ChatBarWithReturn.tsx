@@ -2,12 +2,13 @@
 import { useState } from 'react'
 
 const A = {
-  vedaAvatar: 'https://www.figma.com/api/mcp/asset/17a8ea19-f292-4433-928f-89b5fa14b995',
-  arrowLeft:  'https://www.figma.com/api/mcp/asset/3ce7bc0f-6dc7-4082-ae38-fbc05d66c7c5',
-  plusIcon:   'https://www.figma.com/api/mcp/asset/bafe9bca-5409-4a0d-bc9d-377386a95ebb',
-  tarotIcon:  'https://www.figma.com/api/mcp/asset/f3a87d25-0bf5-4bb7-b0d2-b601d1ea45bb',
-  horoIcon:   'https://www.figma.com/api/mcp/asset/5eb9bb83-a970-442b-bc03-c7a214622713',
-  sendIcon:   'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
+  vedaAvatar:    'https://www.figma.com/api/mcp/asset/17a8ea19-f292-4433-928f-89b5fa14b995',
+  arrowLeft:     'https://www.figma.com/api/mcp/asset/3ce7bc0f-6dc7-4082-ae38-fbc05d66c7c5',
+  plusIcon:      'https://www.figma.com/api/mcp/asset/bafe9bca-5409-4a0d-bc9d-377386a95ebb',
+  tarotIcon:     'https://www.figma.com/api/mcp/asset/f3a87d25-0bf5-4bb7-b0d2-b601d1ea45bb',
+  horoIcon:      'https://www.figma.com/api/mcp/asset/5eb9bb83-a970-442b-bc03-c7a214622713',
+  sendIcon:      'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
+  opheliaAvatar: 'https://www.figma.com/api/mcp/asset/3d99c934-3e4e-41eb-ab74-936c58323d64',
 }
 
 interface Props {
@@ -26,7 +27,8 @@ export default function ChatBarWithReturn({
   placeholder = 'Chat with Veda', disabled = false,
 }: Props) {
   const [focused, setFocused] = useState(false)
-  const active = focused || value.length > 0
+  const [panelOpen, setPanelOpen] = useState(false)
+  const active = (focused || value.length > 0) && !panelOpen
 
   function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter' && value.trim() && !disabled) onSubmit(value.trim())
@@ -34,6 +36,41 @@ export default function ChatBarWithReturn({
 
   return (
     <div style={{ position: 'relative', height: active ? 80 : 137, width: '100%', transition: 'height 0.2s ease' }}>
+
+      {/* Character selection panel */}
+      {panelOpen && (
+        <div style={{
+          position: 'absolute',
+          bottom: 'calc(100% + 8px)',
+          left: 0,
+          width: 255,
+          height: 146,
+          border: '1px solid #2b324a',
+          borderRadius: 15,
+          background: 'linear-gradient(135.9deg, rgb(20,25,40) 31.4%, rgb(25,31,48) 103.5%)',
+          boxShadow: '7px 5px 13.5px 0px rgba(0,0,0,0.4)',
+          overflow: 'hidden',
+          zIndex: 10,
+        }}>
+          <div style={{ position: 'absolute', top: 11, left: 11, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={A.vedaAvatar} alt="Veda" style={{ width: 49, height: 49, borderRadius: '50%', display: 'block', flexShrink: 0 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 20, color: 'white', letterSpacing: '-0.6px', lineHeight: 1 }}>Veda</span>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.5)', letterSpacing: '-0.42px', lineHeight: 1 }}>Spiritual guide</span>
+            </div>
+            <div style={{ background: 'linear-gradient(104.25deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))', borderRadius: 100, padding: '4px 8px', marginLeft: 4, flexShrink: 0 }}>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Default</span>
+            </div>
+          </div>
+          <div style={{ position: 'absolute', top: 84, left: 11, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <img src={A.opheliaAvatar} alt="Ophelia" style={{ width: 49, height: 49, borderRadius: '50%', display: 'block', flexShrink: 0 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 20, color: 'white', letterSpacing: '-0.6px', lineHeight: 1 }}>Ophelia</span>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.5)', letterSpacing: '-0.42px', lineHeight: 1 }}>Tarot card reader</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Gray tab — rounded top, bleeds 4px above container */}
       <div style={{
@@ -90,7 +127,7 @@ export default function ChatBarWithReturn({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKey}
-          onFocus={() => setFocused(true)}
+          onFocus={() => { setFocused(true); setPanelOpen(false); }}
           onBlur={() => setFocused(false)}
           placeholder={placeholder}
           disabled={disabled}
@@ -142,15 +179,20 @@ export default function ChatBarWithReturn({
             left: 11, top: 60,
             display: 'flex', alignItems: 'center', gap: 22,
           }}>
-            {/* Plus button */}
-            <div style={{
-              width: 36, height: 36,
-              backgroundColor: '#1d2134', borderRadius: 18,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
-            }}>
-              <img src={A.plusIcon} alt="+" style={{ width: 23.643, height: 23.643, display: 'block' }} />
-            </div>
+            {/* Plus button — white bg + dark icon when panel open */}
+            <button
+              onClick={() => setPanelOpen(p => !p)}
+              style={{
+                width: 36, height: 36,
+                backgroundColor: panelOpen ? 'white' : '#1d2134',
+                borderRadius: 18, border: 'none', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0, padding: 0,
+                transition: 'background-color 0.15s ease',
+              }}
+            >
+              <img src={A.plusIcon} alt="+" style={{ width: 23.643, height: 23.643, display: 'block', filter: panelOpen ? 'invert(1)' : 'none' }} />
+            </button>
 
             {/* Tarot + Horoscope pills — tighter gap between them */}
             <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
