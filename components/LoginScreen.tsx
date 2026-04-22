@@ -86,7 +86,7 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
       {/* Bottom panel */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
-        height: 695,
+        height: 743,
         backgroundColor: '#080911',
         borderRadius: '30.74px 30.74px 0 0',
         overflow: 'hidden',
