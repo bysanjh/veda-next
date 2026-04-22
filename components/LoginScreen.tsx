@@ -1,14 +1,18 @@
 'use client'
 
-// Fresh Figma assets — node 42:40484 (l2d9ngGhY0y2PleLGQs3JX, fetched 2026-04-22)
+// Assets from Figma node 42:40484 — fetched 2026-04-22
 const A = {
-  logoGroup:    'https://www.figma.com/api/mcp/asset/3c7d2385-4852-4bb9-8bf8-331745ea6bf6',
-  starfield:    'https://www.figma.com/api/mcp/asset/c3575196-aed5-49b4-b1e1-621d04c9b535',
-  star1:        'https://www.figma.com/api/mcp/asset/ecd295a0-a34c-4b8a-88f0-67e8d829b6a8',
-  star2:        'https://www.figma.com/api/mcp/asset/7014e16a-063a-495d-82d7-861d5cd9b5b2',
-  star3:        'https://www.figma.com/api/mcp/asset/6632a923-7cf0-4a33-8736-65d94c876d6d',
-  googleIcon:   'https://www.figma.com/api/mcp/asset/4dc67688-452b-4f99-9a73-2c5927ef4987',
-  facebookIcon: 'https://www.figma.com/api/mcp/asset/631c1ec1-dbaa-491b-9098-dc1e8aec4843',
+  logoGroup:    'https://www.figma.com/api/mcp/asset/da0cc5b5-dd7a-44ee-a43a-d00a199fc288',
+  starfield:    'https://www.figma.com/api/mcp/asset/a1678bb0-79c9-432b-90f5-6cd6d125c34d',
+  ellipse16:    'https://www.figma.com/api/mcp/asset/2c5b8e28-1dfa-4384-b181-61050898c6b3',
+  ellipse17:    'https://www.figma.com/api/mcp/asset/487f9ab9-d773-42c0-a6ac-5652a4596272',
+  ellipse18:    'https://www.figma.com/api/mcp/asset/d9b133a8-52d1-4567-a73b-064c985ca849',
+  lucideX:      'https://www.figma.com/api/mcp/asset/9cbe70e0-32f8-459a-9323-d5d7d1dc0176',
+  star1:        'https://www.figma.com/api/mcp/asset/23c67d42-d451-4d9d-8389-43c96255a9c9',
+  star2:        'https://www.figma.com/api/mcp/asset/510f99b5-e660-496d-a736-4f5cd4038461',
+  star3:        'https://www.figma.com/api/mcp/asset/4fed7644-0c8b-44c2-bec0-377528a8392d',
+  googleIcon:   'https://www.figma.com/api/mcp/asset/f96872cb-affd-4e9b-aa75-94ed1470291d',
+  facebookIcon: 'https://www.figma.com/api/mcp/asset/987e67e8-3a49-44f1-9648-6184eaaaa24f',
 }
 
 interface LoginScreenProps {
@@ -25,10 +29,7 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
       </div>
 
       {/* Dark gradient overlay */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(99.75deg, rgba(12,19,37,0.9) 14%, rgba(31,31,31,0.9) 95%)',
-      }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(99.75deg, rgba(12,19,37,0.9) 14%, rgba(31,31,31,0.9) 95%)' }} />
 
       {/* Edge fade gradients */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 172, background: 'linear-gradient(to bottom, rgba(0,0,0,0.78), transparent)', opacity: 0.8 }} />
@@ -36,105 +37,64 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
       <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: 83, background: 'linear-gradient(to right, rgba(0,0,0,0.78), transparent)', opacity: 0.8 }} />
       <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 72, background: 'linear-gradient(to left, rgba(0,0,0,0.78), transparent)', opacity: 0.8 }} />
 
-      {/* Header bar */}
+      {/* Header — 101px, logo at top: 45px per Figma node 42:40495-42:40504 */}
       <div style={{
-        position: 'absolute', top: 0, left: 0, right: 0, height: 64,
+        position: 'absolute', top: 0, left: 0, right: 0, height: 101,
         backgroundColor: '#101010',
         borderBottom: '1px solid rgba(255,255,255,0.2)',
-        display: 'flex', alignItems: 'center',
-        paddingLeft: 17,
-        gap: 9,
         zIndex: 10,
       }}>
-        <div style={{ width: 43, height: 43, position: 'relative', flexShrink: 0 }}>
-          <img src={A.logoGroup} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
+        <div style={{ position: 'absolute', left: 17, top: 45, display: 'flex', alignItems: 'center', gap: 9, height: 43 }}>
+          <img src={A.logoGroup} alt="" style={{ width: 43, height: 43, flexShrink: 0, display: 'block', objectFit: 'contain' }} />
+          <p style={{
+            fontFamily: 'var(--font-khand)',
+            fontSize: 25.7, fontWeight: 500,
+            color: 'white',
+            letterSpacing: '1.03px',
+            textTransform: 'uppercase',
+            margin: 0, lineHeight: 1,
+          }}>
+            Astrology
+            <span style={{ fontWeight: 300, letterSpacing: '0.64px' }}>.com</span>
+          </p>
         </div>
-        <p style={{
-          fontFamily: 'var(--font-khand)',
-          fontSize: 25.7, fontWeight: 500,
-          color: 'white',
-          letterSpacing: '1.03px',
-          textTransform: 'uppercase',
-          margin: 0, lineHeight: 1,
-        }}>
-          Astrology
-          <span style={{ fontWeight: 300, letterSpacing: '0.64px' }}>.com</span>
-        </p>
       </div>
 
-      {/* Bottom panel — fills full height below header using flex */}
+      {/* Bottom panel — fixed 695px from bottom, starfield visible above */}
       <div style={{
-        position: 'absolute', top: 64, left: 0, right: 0, bottom: 0,
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        height: 'min(695px, calc(100dvh - 80px))',
         backgroundColor: '#080911',
-        borderRadius: '30px 30px 0 0',
-        display: 'flex',
-        flexDirection: 'column',
+        borderRadius: '30.74px 30.74px 0 0',
         overflow: 'hidden',
       }}>
 
-        {/* Hero — fixed height */}
-        <div style={{
-          flexShrink: 0,
-          height: 240,
-          borderRadius: '30px 30px 0 0',
-          overflow: 'hidden',
-          position: 'relative',
-        }}>
-          <img src="/hero-bg.jpg" alt="" style={{
-            position: 'absolute', inset: 0,
-            width: '100%', height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center top',
-          }} />
-          <img src="/screens-mockup.png" alt="" style={{
-            position: 'absolute',
-            left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '100%', height: 'auto',
-            display: 'block', zIndex: 1,
-          }} />
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: 72,
-            background: 'linear-gradient(to top, #080911, transparent)',
-            zIndex: 2,
-          }} />
+        {/* Purple ellipse glow — lower section of panel */}
+        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', top: 518, width: 465, height: 550, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', inset: '-25.75% -30.42%' }}>
+            <img src={A.ellipse17} alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
+          </div>
         </div>
 
-        {/* X / Close — floats over the hero */}
-        <button
-          onClick={onContinue}
-          aria-label="Skip"
-          style={{
-            position: 'absolute', right: 18, top: 18,
-            width: 32, height: 32,
-            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            zIndex: 20,
-          }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ display: 'block', margin: 'auto' }}>
-            <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-          </svg>
-        </button>
-
-        {/* Scrollable content — fills remaining space, safe-area aware */}
+        {/* Scrollable CREATE ACCOUNT content — starts below the 239px hero */}
         <div
           className="no-scrollbar"
           style={{
-            flex: 1,
+            position: 'absolute', top: 274, left: 0, right: 0, bottom: 0,
             overflowY: 'auto',
             WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
-            padding: '20px 18px',
+            padding: '0 18px',
             paddingBottom: 'max(48px, env(safe-area-inset-bottom, 0px))',
             display: 'flex',
             flexDirection: 'column',
-            gap: 24,
+            gap: 26,
           }}
         >
           {/* Heading + tagline */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             <p style={{
               fontFamily: 'var(--font-khand)',
-              fontSize: 26, fontWeight: 600,
+              fontSize: 26.35, fontWeight: 600,
               color: 'white',
               textTransform: 'uppercase',
               margin: 0, lineHeight: 1.06,
@@ -143,29 +103,29 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             </p>
             <p style={{
               fontFamily: 'var(--font-roboto)',
-              fontSize: 16.5, fontWeight: 400,
+              fontSize: 16.47, fontWeight: 400,
               color: 'white',
               letterSpacing: '-0.33px',
-              margin: 0, lineHeight: 1.3,
+              margin: 0, lineHeight: 1.06,
             }}>
               Veda - your personal astrologer, getting to know you one conversation at a time
             </p>
           </div>
 
           {/* Star bullets */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {([
               [A.star1, '20 free conversations a day'],
-              [A.star2, 'Picks up where you left off — always'],
+              [A.star2, 'Picks up where you left off — always'],
               [A.star3, 'Predictive guidance shaped around your journey'],
             ] as [string, string][]).map(([src, text]) => (
-              <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-                <img src={src} alt="" style={{ width: 21, height: 21, flexShrink: 0, display: 'block', marginTop: 1 }} />
+              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 8.78 }}>
+                <img src={src} alt="" style={{ width: 20.86, height: 20.86, flexShrink: 0, display: 'block' }} />
                 <p style={{
                   fontFamily: 'var(--font-roboto)',
-                  fontSize: 17.6, fontWeight: 400,
+                  fontSize: 17.57, fontWeight: 400,
                   color: 'white', margin: 0,
-                  lineHeight: 1.2,
+                  lineHeight: 0.81,
                 }}>
                   {text}
                 </p>
@@ -178,17 +138,17 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             <button
               onClick={onContinue}
               style={{
-                width: '100%', height: 53,
+                width: '100%', height: 52.7,
                 backgroundColor: 'white',
                 borderRadius: 50, border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 gap: 11, cursor: 'pointer', overflow: 'hidden',
               }}
             >
-              <img src={A.googleIcon} alt="" style={{ width: 35, height: 35, display: 'block', flexShrink: 0 }} />
+              <img src={A.googleIcon} alt="" style={{ width: 35.13, height: 35.13, display: 'block', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-roboto)',
-                fontSize: 19.8, fontWeight: 500,
+                fontSize: 19.76, fontWeight: 500,
                 color: '#101010', whiteSpace: 'nowrap',
               }}>
                 Continue with Google
@@ -198,17 +158,17 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             <button
               onClick={onContinue}
               style={{
-                width: '100%', height: 53,
+                width: '100%', height: 52.7,
                 backgroundColor: 'white',
-                borderRadius: 26, border: 'none',
+                borderRadius: 26.35, border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 gap: 11, cursor: 'pointer', overflow: 'hidden',
               }}
             >
-              <img src={A.facebookIcon} alt="" style={{ width: 35, height: 35, display: 'block', flexShrink: 0 }} />
+              <img src={A.facebookIcon} alt="" style={{ width: 35.13, height: 35.13, display: 'block', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-roboto)',
-                fontSize: 19.8, fontWeight: 500,
+                fontSize: 19.76, fontWeight: 500,
                 color: '#101010', whiteSpace: 'nowrap',
               }}>
                 Continue with Facebook
@@ -217,15 +177,82 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
 
             <p style={{
               fontFamily: 'var(--font-roboto)',
-              fontSize: 13.2, fontWeight: 400,
+              fontSize: 13.18, fontWeight: 400,
               color: 'rgba(255,255,255,0.52)',
               textAlign: 'center', margin: 0,
-              lineHeight: 1,
+              lineHeight: 0.81,
             }}>
               Memory is on by default &middot; manage in settings
             </p>
           </div>
         </div>
+
+        {/* Purple hero section — top 239px of the dark panel */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0,
+          height: 239,
+          backgroundColor: '#4c48a9',
+          borderRadius: '30.74px 30.74px 0 0',
+          overflow: 'hidden',
+          pointerEvents: 'none',
+        }}>
+          {/* Space imagery — very faint overlay */}
+          <img
+            src={A.starfield} alt=""
+            style={{
+              position: 'absolute',
+              width: '363%', height: '145%',
+              left: '-89.87%', top: 0,
+              opacity: 0.2,
+              mixBlendMode: 'lighten',
+              maxWidth: 'none', objectFit: 'cover',
+            }}
+          />
+
+          {/* Ellipse16 left glow */}
+          <div style={{ position: 'absolute', left: -114, top: -815, width: 449, height: 935 }}>
+            <div style={{ position: 'absolute', inset: '-35.21% -73.34%' }}>
+              <img src={A.ellipse16} alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
+            </div>
+          </div>
+
+          {/* Ellipse18 right glow */}
+          <div style={{ position: 'absolute', left: 334, top: -725, width: 449, height: 935 }}>
+            <div style={{ position: 'absolute', inset: '-19.05% -39.69%' }}>
+              <img src={A.ellipse18} alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
+            </div>
+          </div>
+
+          {/* Bottom gradient — fades purple into dark panel */}
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 80,
+            background: 'linear-gradient(to top, #080911, transparent)',
+          }} />
+
+          {/* Screens mockup centered in hero */}
+          <img src="/screens-mockup.png" alt="" style={{
+            position: 'absolute',
+            left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '100%', height: 'auto',
+            display: 'block', zIndex: 1,
+          }} />
+        </div>
+
+        {/* X / Skip button — top-right of panel, above the hero */}
+        <button
+          onClick={onContinue}
+          aria-label="Skip"
+          style={{
+            position: 'absolute', right: 18, top: 18,
+            width: 32, height: 32,
+            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            zIndex: 20, pointerEvents: 'auto',
+          }}
+        >
+          <img src={A.lucideX} alt="" style={{ width: 32, height: 32, display: 'block' }} />
+        </button>
+
       </div>
     </div>
   )
