@@ -27,154 +27,6 @@ interface LoginScreenProps {
   onContinue: () => void
 }
 
-// ─── Side panel card (YOUR LENS / YOUR GOALS) ────────────────────────────────
-
-function SideCard({ title, editIconSrc, section1, section2 }: {
-  title: string
-  editIconSrc: string
-  section1: { label: string; text: string }
-  section2: { label: string; text: string }
-}) {
-  return (
-    <div style={{
-      width: 110, height: 143,
-      backgroundColor: '#101010',
-      border: '2.27px solid rgba(162,160,208,0.78)',
-      borderRadius: 10.76,
-      overflow: 'hidden',
-      padding: '11px 11px 8px',
-      flexShrink: 0,
-    }}>
-      {/* Header row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontFamily: 'var(--font-roboto)', fontSize: 5.9, color: 'rgba(255,255,255,0.63)', letterSpacing: '-0.24px' }}>
-          {title}
-        </span>
-        <div style={{ backgroundColor: '#4c48a9', borderRadius: 2.5, padding: '2.8px 4px', display: 'flex', alignItems: 'center', gap: 2 }}>
-          <img src={editIconSrc} alt="" style={{ width: 4, height: 4, display: 'block' }} />
-          <span style={{ fontFamily: 'var(--font-khand)', fontSize: 5.1, color: 'white', textTransform: 'uppercase', letterSpacing: '0.5px' }}>EDIT</span>
-        </div>
-      </div>
-
-      {/* Section 1 */}
-      <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 5.8, color: 'white', fontWeight: 500, letterSpacing: '-0.23px', margin: '0 0 3px', lineHeight: 1.1 }}>
-        {section1.label}
-      </p>
-      <div style={{ height: 0, borderTop: '0.64px solid rgba(255,255,255,0.2)', marginBottom: 4 }} />
-      <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 5.2, color: 'white', letterSpacing: '-0.21px', lineHeight: 1.1, margin: '0 0 8px', whiteSpace: 'pre-wrap' }}>
-        {section1.text}
-      </p>
-
-      {/* Section 2 */}
-      <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 5.8, color: 'white', fontWeight: 500, letterSpacing: '-0.23px', margin: '0 0 3px', lineHeight: 1.1 }}>
-        {section2.label}
-      </p>
-      <div style={{ height: 0, borderTop: '0.64px solid rgba(255,255,255,0.2)', marginBottom: 4 }} />
-      <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 5.2, color: 'white', letterSpacing: '-0.21px', lineHeight: 1.1, margin: 0, whiteSpace: 'pre-wrap' }}>
-        {section2.text}
-      </p>
-    </div>
-  )
-}
-
-// ─── Center CHAT WITH VEDA card ───────────────────────────────────────────────
-
-function ChatCard() {
-  return (
-    <div style={{
-      width: 149, height: 194,
-      backgroundColor: '#101010',
-      border: '3.07px solid rgba(162,160,208,0.78)',
-      borderRadius: 14.5,
-      overflow: 'hidden',
-      position: 'absolute',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      top: 26,
-      zIndex: 2,
-    }}>
-      <p style={{
-        fontFamily: 'var(--font-khand)',
-        fontSize: 9.2, color: 'white',
-        letterSpacing: '-0.37px', lineHeight: 1.3,
-        padding: '12px 7px 0',
-        margin: 0,
-      }}>
-        CHAT WITH VEDA
-      </p>
-
-      <div style={{ padding: '4px 7px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {/* Veda msg 1 */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end' }}>
-          <img src={A.avatarBlue} alt="" style={{ width: 15, height: 15, borderRadius: 8, flexShrink: 0, display: 'block' }} />
-          <div style={{
-            flex: 1,
-            background: 'linear-gradient(233deg, rgba(139,149,187,0.2), rgba(79,85,108,0.2))',
-            border: '0.38px solid #4d536b',
-            borderRadius: '3px 3px 3px 0',
-            padding: '4.6px',
-            backdropFilter: 'blur(1.9px)',
-          }}>
-            <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 6.1, color: '#faeff4', lineHeight: 1.2, margin: 0 }}>
-              {"Hello lovely, I am Veda, the world's first AI psychic advisor 🔮\n\nI'm happy to provide clarity through psychic, tarot, numerology, and love and relationship readings."}
-            </p>
-          </div>
-        </div>
-
-        {/* User reply */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <div style={{ backgroundColor: '#ac408c', borderRadius: '3px 3px 0 3px', padding: '4.6px' }}>
-            <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 6.1, color: 'white', lineHeight: 1.2, margin: 0, whiteSpace: 'nowrap' }}>
-              What about my horoscope?
-            </p>
-          </div>
-        </div>
-
-        {/* Veda msg 2 */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'flex-end' }}>
-          <img src={A.avatarPurple} alt="" style={{ width: 15, height: 15, borderRadius: 8, flexShrink: 0, display: 'block' }} />
-          <div style={{
-            flex: 1,
-            background: 'linear-gradient(214deg, rgba(139,149,187,0.2), rgba(79,85,108,0.2))',
-            border: '0.38px solid #4d536b',
-            borderRadius: '3px 3px 3px 0',
-            padding: '4.6px',
-            backdropFilter: 'blur(1.9px)',
-          }}>
-            <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 6.1, color: '#faeff4', lineHeight: 1.2, margin: 0 }}>
-              {"Sure, I'd love to give you a quick horoscope reading! What's your zodiac sign?"}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Input bar */}
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0 8px 8px' }}>
-        <div style={{
-          border: '0.39px solid #7d61a7',
-          borderRadius: 25,
-          height: 22,
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: 6,
-          paddingRight: 3,
-          justifyContent: 'space-between',
-        }}>
-          <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 5, color: '#8b8aa8', margin: 0, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-            What will my love life look like in the future?
-          </p>
-          <div style={{ position: 'relative', width: 17, height: 17, flexShrink: 0 }}>
-            <div style={{ position: 'absolute', inset: 0, backgroundColor: '#4c48a9', borderRadius: 9 }} />
-            <img src={A.sendIcon} alt="" style={{ position: 'absolute', top: 4, left: 4, width: 9, height: 9 }} />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── Main LoginScreen ─────────────────────────────────────────────────────────
-
 export default function LoginScreen({ onContinue }: LoginScreenProps) {
   return (
     <div style={{ position: 'absolute', inset: 0, zIndex: 50, overflow: 'hidden', backgroundColor: '#0a0c1a' }}>
@@ -252,40 +104,40 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
           </div>
         </div>
 
-        {/* Purple top section */}
+        {/* Hero section */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
           height: 239,
-          backgroundColor: '#4c48a9',
           borderRadius: '30.74px 30.74px 0 0',
           overflow: 'hidden',
         }}>
-          {/* Starfield texture — mix-blend-lighten, opacity 20% */}
-          <div style={{ position: 'absolute', inset: 0, opacity: 0.2, mixBlendMode: 'lighten', overflow: 'hidden' }}>
-            <img src={A.starfield} alt="" style={{ position: 'absolute', width: '363%', height: '145%', left: '-90%', top: 0, objectFit: 'cover', maxWidth: 'none' }} />
-          </div>
-
-          {/* Ellipse glow top-left */}
-          <div style={{ position: 'absolute', left: -114, top: -816, width: 449, height: 936 }}>
-            <div style={{ position: 'absolute', inset: '-35.21% -73.34%' }}>
-              <img src={A.ellipse16} alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
-            </div>
-          </div>
-
-          {/* Ellipse glow right */}
-          <div style={{ position: 'absolute', left: 335, top: -726, width: 449, height: 936 }}>
-            <div style={{ position: 'absolute', inset: '-19.05% -39.69%' }}>
-              <img src={A.ellipse18} alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
-            </div>
-          </div>
-
-          {/* Bottom gradient fade into dark panel */}
-          <div style={{
-            position: 'absolute', bottom: 0, left: 0, right: 0, height: 203,
-            background: 'linear-gradient(1.39deg, rgb(76,72,169) 3.6%, rgba(76,72,169,0) 177.7%)',
+          {/* Background image */}
+          <img src="/hero-bg.jpg" alt="" style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center top',
           }} />
 
-          {/* X / Close button — white Lucide X */}
+          {/* Screens mockup — centered */}
+          <img src="/screens-mockup.png" alt="" style={{
+            position: 'absolute',
+            left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            zIndex: 1,
+          }} />
+
+          {/* Bottom fade into dark panel */}
+          <div style={{
+            position: 'absolute', bottom: 0, left: 0, right: 0, height: 72,
+            background: 'linear-gradient(to top, #080911, transparent)',
+            zIndex: 2,
+          }} />
+
+          {/* X / Close button */}
           <button
             onClick={onContinue}
             aria-label="Skip"
@@ -293,63 +145,11 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
               position: 'absolute', right: 18, top: 18,
               width: 32, height: 32,
               background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+              zIndex: 3,
             }}
           >
             <img src={A.closeX} alt="close" style={{ width: 32, height: 32, display: 'block' }} />
           </button>
-
-          {/* Three preview cards */}
-          <div style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0 }}>
-            {/* Left card — YOUR LENS */}
-            <div style={{ position: 'absolute', left: 44, top: 66 }}>
-              <SideCard
-                title="YOUR LENS"
-                editIconSrc={A.editIcon}
-                section1={{
-                  label: 'Beliefs',
-                  text: "A difficult work decision you've been circling.\n\nA question about where you belong.",
-                }}
-                section2={{
-                  label: 'Spiritual practice',
-                  text: "You're exploring mindfulness and meditation.\n\nYou're drawn to practices that connect you with nature.",
-                }}
-              />
-            </div>
-
-            {/* Right card — YOUR GOALS */}
-            <div style={{ position: 'absolute', right: 0, left: 258, top: 66 }}>
-              <SideCard
-                title="YOUR GOALS"
-                editIconSrc={A.editIcon2}
-                section1={{
-                  label: 'Ambitions',
-                  text: 'You want to improve your health and spend more time outdoors.',
-                }}
-                section2={{
-                  label: 'Predicitions',
-                  text: 'In 3 days, you will feel energized.\n\nIn 7 days, a new opportunity will arise.',
-                }}
-              />
-            </div>
-
-            {/* Center card — CHAT WITH VEDA */}
-            <ChatCard />
-
-            {/* Blur edges between side cards and center */}
-            <div style={{
-              position: 'absolute', left: 114, top: 68, width: 23, height: 138,
-              backgroundImage: `url(${A.cardBlur})`,
-              backgroundSize: 'cover',
-              filter: 'blur(4.7px)',
-              transform: 'scaleX(-1)',
-            }} />
-            <div style={{
-              position: 'absolute', right: 114, top: 68, width: 23, height: 138,
-              backgroundImage: `url(${A.cardBlur})`,
-              backgroundSize: 'cover',
-              filter: 'blur(4.7px)',
-            }} />
-          </div>
         </div>
 
         {/* CREATE ACCOUNT content */}
