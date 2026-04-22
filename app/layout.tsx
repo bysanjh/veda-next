@@ -30,9 +30,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  width: 'device-width',
+  width: '402',
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -41,9 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${roboto.variable} ${khand.variable} ${dmSans.variable}`}>
         <div
           style={{
-            maxWidth: '402px',
+            width: '402px',
+            height: '874px',
             margin: '0 auto',
-            minHeight: '100vh',
             position: 'relative',
             overflow: 'hidden',
             background: '#0a0c1a',
