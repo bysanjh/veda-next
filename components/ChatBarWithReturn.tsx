@@ -150,31 +150,32 @@ export default function ChatBarWithReturn({
               <img src={A.plusIcon} alt="+" style={{ width: 23.643, height: 23.643, display: 'block' }} />
             </div>
 
-            {/* Tarot pill */}
-            <button onClick={onTarot} disabled={disabled} style={{
-              background: 'linear-gradient(111.56deg, rgb(29,33,52) 42.76%, rgb(57,63,91) 136.6%)',
-              borderRadius: 100, border: 'none', cursor: 'pointer',
-              padding: '7px 10px',
-              display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
-            }}>
-              <img src={A.tarotIcon} alt="" style={{ width: 29, height: 22, display: 'block' }} />
-              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Tarot</span>
-            </button>
+            {/* Tarot + Horoscope pills — tighter gap between them */}
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <button onClick={onTarot} disabled={disabled} style={{
+                background: 'linear-gradient(111.56deg, rgb(29,33,52) 42.76%, rgb(57,63,91) 136.6%)',
+                borderRadius: 100, border: 'none', cursor: 'pointer',
+                padding: '7px 10px',
+                display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
+              }}>
+                <img src={A.tarotIcon} alt="" style={{ width: 29, height: 22, display: 'block' }} />
+                <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Tarot</span>
+              </button>
 
-            {/* Horoscope pill */}
-            <button onClick={onHoroscope} disabled={disabled} style={{
-              background: 'linear-gradient(103.19deg, rgb(29,33,52) 7.77%, rgb(57,63,91) 109.48%)',
-              borderRadius: 100, border: 'none', cursor: 'pointer',
-              padding: '7px 10px',
-              display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
-            }}>
-              <div style={{ position: 'relative', width: 20.93, height: 20.93, flexShrink: 0 }}>
-                <div style={{ position: 'absolute', inset: '14.59%' }}>
-                  <img src={A.horoIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+              <button onClick={onHoroscope} disabled={disabled} style={{
+                background: 'linear-gradient(103.19deg, rgb(29,33,52) 7.77%, rgb(57,63,91) 109.48%)',
+                borderRadius: 100, border: 'none', cursor: 'pointer',
+                padding: '7px 10px',
+                display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
+              }}>
+                <div style={{ position: 'relative', width: 20.93, height: 20.93, flexShrink: 0 }}>
+                  <div style={{ position: 'absolute', inset: '14.59%' }}>
+                    <img src={A.horoIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+                  </div>
                 </div>
-              </div>
-              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Horoscope</span>
-            </button>
+                <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Horoscope</span>
+              </button>
+            </div>
           </div>
         )}
       </div>
