@@ -181,27 +181,6 @@ export default function OpheliaIntroOverlay({ onClose, onYesNo, onThreeCard }: O
         </div>
       </div>
 
-      {/* Begin your reading button */}
-      <button
-        onClick={onClose}
-        className="absolute flex items-center justify-center hover:opacity-90 transition-opacity"
-        style={{
-          top: 700,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          backgroundColor: '#4c48a9',
-          borderRadius: 8,
-          width: 354,
-          height: 52,
-        }}
-      >
-        <p
-          className="font-roboto font-normal text-white m-0 whitespace-nowrap"
-          style={{ fontSize: 18, letterSpacing: '-0.72px', fontVariationSettings: "'wdth' 100" }}
-        >
-          Begin your reading
-        </p>
-      </button>
     </div>
   )
 }
