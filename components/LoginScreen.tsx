@@ -107,7 +107,7 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
         {/* Hero section */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0,
-          height: 239,
+          height: 280,
           borderRadius: '30.74px 30.74px 0 0',
           overflow: 'hidden',
         }}>
@@ -136,25 +136,27 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             background: 'linear-gradient(to top, #080911, transparent)',
             zIndex: 2,
           }} />
-
-          {/* X / Close button */}
-          <button
-            onClick={onContinue}
-            aria-label="Skip"
-            style={{
-              position: 'absolute', right: 18, top: 18,
-              width: 32, height: 32,
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              zIndex: 3,
-            }}
-          >
-            <img src={A.closeX} alt="close" style={{ width: 32, height: 32, display: 'block' }} />
-          </button>
         </div>
+
+        {/* X / Close button — sits above hero, not clipped by it */}
+        <button
+          onClick={onContinue}
+          aria-label="Skip"
+          style={{
+            position: 'absolute', right: 18, top: 18,
+            width: 32, height: 32,
+            background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            zIndex: 10,
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ display: 'block', margin: 'auto' }}>
+            <path d="M18 6L6 18M6 6l12 12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+          </svg>
+        </button>
 
         {/* CREATE ACCOUNT content */}
         <div style={{
-          position: 'absolute', left: 18, top: 274,
+          position: 'absolute', left: 18, top: 315,
           width: 377,
           display: 'flex', flexDirection: 'column', gap: 26,
           alignItems: 'center',
