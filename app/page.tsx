@@ -3,7 +3,6 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import Header from '@/components/Header'
 import StarfieldBg from '@/components/StarfieldBg'
 import ChatBar from '@/components/ChatBar'
-import ChatBarWithReturn from '@/components/ChatBarWithReturn'
 import HomeCards from '@/components/HomeCards'
 import UserBubble from '@/components/UserBubble'
 import VedaMessage from '@/components/VedaMessage'
@@ -529,32 +528,17 @@ export default function VedaPage() {
       </div>
 
       {/* Chat bar */}
-      {screen === 'home' || screen === 'horoscope' ? (
-        <div className="absolute inset-x-0 bottom-0" style={{ height: 120, zIndex: 20 }}>
-          <ChatBar
-            value={input}
-            onChange={setInput}
-            onSubmit={() => handleSendMessage()}
-            onTarot={handleTarotPill}
-            onHoroscope={handleHoroscopePill}
-            placeholder={chatPlaceholder}
-            disabled={!!streamingId}
-          />
-        </div>
-      ) : (
-        <div className="absolute inset-x-0 bottom-0" style={{ height: 132, zIndex: 20 }}>
-          <ChatBarWithReturn
-            value={input}
-            onChange={setInput}
-            onSubmit={() => handleSendMessage()}
-            onTarot={handleTarotPill}
-            onHoroscope={handleHoroscopePill}
-            onReturnToVeda={handleReturnToVeda}
-            placeholder={chatPlaceholder}
-            disabled={!!streamingId}
-          />
-        </div>
-      )}
+      <div className="absolute inset-x-0 bottom-0" style={{ height: 120, zIndex: 20 }}>
+        <ChatBar
+          value={input}
+          onChange={setInput}
+          onSubmit={() => handleSendMessage()}
+          onTarot={handleTarotPill}
+          onHoroscope={handleHoroscopePill}
+          placeholder={chatPlaceholder}
+          disabled={!!streamingId}
+        />
+      </div>
 
       {/* Ophelia intro overlay */}
       {showOpheliaOverlay && (
