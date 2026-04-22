@@ -587,15 +587,7 @@ export default function VedaPage() {
 
       {/* Login screen */}
       {onboardingState === 'login' && (typeof window === 'undefined' || localStorage.getItem('dev_bypass') !== 'true') && (
-        <LoginScreen onContinue={() => setOnboardingState('onboarding')} />
-      )}
-
-      {/* Onboarding */}
-      {onboardingState === 'onboarding' && (
-        <OnboardingFlow
-          onComplete={() => setOnboardingState('done')}
-          onClose={() => setOnboardingState('done')}
-        />
+        <LoginScreen onContinue={() => setOnboardingState('done')} />
       )}
     </div>
   )
