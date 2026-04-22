@@ -1,6 +1,12 @@
 'use client'
-import Image from 'next/image'
-import { ASSETS } from '@/lib/assets'
+import { useState } from 'react'
+
+const A = {
+  plusIcon:  'https://www.figma.com/api/mcp/asset/bafe9bca-5409-4a0d-bc9d-377386a95ebb',
+  tarotIcon: 'https://www.figma.com/api/mcp/asset/f3a87d25-0bf5-4bb7-b0d2-b601d1ea45bb',
+  horoIcon:  'https://www.figma.com/api/mcp/asset/5eb9bb83-a970-442b-bc03-c7a214622713',
+  sendIcon:  'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
+}
 
 interface ChatBarProps {
   value: string
@@ -13,112 +19,124 @@ interface ChatBarProps {
 }
 
 export default function ChatBar({
-  value,
-  onChange,
-  onSubmit,
-  onTarot,
-  onHoroscope,
+  value, onChange, onSubmit, onTarot, onHoroscope,
   placeholder = 'Chat with Veda',
   disabled = false,
 }: ChatBarProps) {
+  const [focused, setFocused] = useState(false)
+  const active = focused || value.length > 0
+
   function handleKey(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter' && value.trim() && !disabled) {
-      onSubmit(value.trim())
-    }
+    if (e.key === 'Enter' && value.trim() && !disabled) onSubmit(value.trim())
   }
 
   return (
     <div className="absolute bottom-[24px] left-1/2 -translate-x-1/2 z-20" style={{ width: 377 }}>
-      <div
-        className="relative overflow-hidden"
-        style={{ backgroundColor: '#1b1b1f', height: 104, borderRadius: 29 }}
-      >
-        {/* Placeholder / input — top row */}
+      <div style={{
+        position: 'relative',
+        height: 109,
+        borderRadius: active ? 17 : 29,
+        background: 'linear-gradient(-72.19deg, rgba(42,49,73,0.6) 8.44%, rgba(29,35,54,0.6) 86.36%)',
+        border: '1px solid #131725',
+        boxShadow: '1px 1px 7.1px 1.3px rgba(61,69,100,0.28)',
+        overflow: 'hidden',
+        transition: 'border-radius 0.15s ease',
+      }}>
+
+        {/* Input / placeholder */}
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKey}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           placeholder={placeholder}
           disabled={disabled}
-          className="absolute bg-transparent border-none outline-none font-roboto text-[18px] text-white"
           style={{
-            top: 12,
-            left: 20,
-            right: 60,
+            position: 'absolute',
+            top: 11, left: 14, right: 52,
+            background: 'none', border: 'none', outline: 'none',
+            fontFamily: 'var(--font-roboto)',
+            fontWeight: 400,
+            fontSize: 18,
+            color: value ? 'white' : 'rgba(255,255,255,0.54)',
             letterSpacing: '-0.54px',
-            caretColor: 'white',
             lineHeight: 'normal',
-            color: value ? 'white' : 'rgba(255,255,255,0.24)',
             fontVariationSettings: "'wdth' 100",
+            caretColor: 'white',
           }}
         />
 
-        {/* Send button — only visible when typing */}
+        {/* Send button — white circle, right side, only when text present */}
         {value.trim() && (
           <button
             onClick={() => { if (!disabled) onSubmit(value.trim()) }}
             disabled={disabled}
-            className="absolute flex items-center justify-center rounded-full"
-            style={{ top: 12, right: 12, width: 36, height: 36, backgroundColor: '#4c48a9' }}
+            style={{
+              position: 'absolute',
+              right: 9,
+              top: '50%', transform: 'translateY(-50%)',
+              width: 34, height: 34,
+              borderRadius: 113,
+              backgroundColor: 'white',
+              border: 'none', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              padding: 5.667, flexShrink: 0,
+            }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 12V4M8 4L4 8M8 4L12 8" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <div style={{ position: 'relative', width: 22.667, height: 22.667 }}>
+              <div style={{ position: 'absolute', inset: '12.5% 18.75%' }}>
+                <img src={A.sendIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+              </div>
+            </div>
           </button>
         )}
 
-        {/* Bottom row — y:56 inside bar */}
-        <div
-          className="absolute flex items-center"
-          style={{ bottom: 12, left: 12, gap: 22 }}
-        >
-          {/* Plus button */}
-          <div
-            className="flex items-center justify-center shrink-0"
-            style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#292930' }}
-          >
-            <div className="relative w-[24px] h-[24px]">
-              <Image src={ASSETS.plusIcon} alt="attach" fill unoptimized className="object-contain" />
+        {/* Bottom row — plus + tarot + horoscope, hidden when active */}
+        {!active && (
+          <div style={{
+            position: 'absolute',
+            left: 11, top: 60,
+            display: 'flex', alignItems: 'center', gap: 22,
+          }}>
+            {/* Plus button */}
+            <div style={{
+              width: 36, height: 36,
+              backgroundColor: '#1d2134', borderRadius: 18,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              <img src={A.plusIcon} alt="+" style={{ width: 23.643, height: 23.643, display: 'block' }} />
             </div>
+
+            {/* Tarot pill */}
+            <button onClick={onTarot} disabled={disabled} style={{
+              background: 'linear-gradient(111.56deg, rgb(29,33,52) 42.76%, rgb(57,63,91) 136.6%)',
+              borderRadius: 100, border: 'none', cursor: 'pointer',
+              padding: '7px 10px',
+              display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
+            }}>
+              <img src={A.tarotIcon} alt="" style={{ width: 29, height: 22, display: 'block' }} />
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Tarot</span>
+            </button>
+
+            {/* Horoscope pill */}
+            <button onClick={onHoroscope} disabled={disabled} style={{
+              background: 'linear-gradient(103.19deg, rgb(29,33,52) 7.77%, rgb(57,63,91) 109.48%)',
+              borderRadius: 100, border: 'none', cursor: 'pointer',
+              padding: '7px 10px',
+              display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
+            }}>
+              <div style={{ position: 'relative', width: 20.93, height: 20.93, flexShrink: 0 }}>
+                <div style={{ position: 'absolute', inset: '14.59%' }}>
+                  <img src={A.horoIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+                </div>
+              </div>
+              <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Horoscope</span>
+            </button>
           </div>
-
-          {/* Tarot chip */}
-          <button
-            onClick={onTarot}
-            disabled={disabled}
-            className="flex items-center hover:opacity-80 transition-opacity shrink-0"
-            style={{ backgroundColor: '#292930', borderRadius: 100, padding: '7px 10px', gap: 4 }}
-          >
-            <div className="relative w-[26px] h-[20px] shrink-0">
-              <Image src={ASSETS.tarotPillIcon} alt="" fill unoptimized className="object-contain" />
-            </div>
-            <span
-              className="font-roboto text-[14px] text-white leading-none"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              Tarot
-            </span>
-          </button>
-
-          {/* Horoscope chip */}
-          <button
-            onClick={onHoroscope}
-            disabled={disabled}
-            className="flex items-center hover:opacity-80 transition-opacity shrink-0"
-            style={{ backgroundColor: '#292930', borderRadius: 100, padding: '7px 10px', gap: 4 }}
-          >
-            <div className="relative w-[20px] h-[20px] shrink-0">
-              <Image src={ASSETS.horoscopePillIcon} alt="" fill unoptimized className="object-contain" />
-            </div>
-            <span
-              className="font-roboto text-[14px] text-white leading-none"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              Horoscope
-            </span>
-          </button>
-        </div>
+        )}
       </div>
     </div>
   )
