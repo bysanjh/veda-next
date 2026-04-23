@@ -64,11 +64,11 @@ export default function OpheliaIntroOverlay({ onClose, onYesNo, onThreeCard }: O
           alt="Ophelia"
           style={{
             position: 'absolute',
+            inset: 0,
             width: '100%',
-            height: '140%',
-            top: '-20%',
+            height: '100%',
             objectFit: 'cover',
-            objectPosition: 'center top',
+            objectPosition: 'center 35%',
             zIndex: 1,
           }}
         />
@@ -150,14 +150,14 @@ export default function OpheliaIntroOverlay({ onClose, onYesNo, onThreeCard }: O
               onClick={onYesNo}
               style={{ flex: 1, maxHeight: 88, minHeight: 64, borderRadius: 12, border: 'none', overflow: 'hidden', cursor: 'pointer', width: '100%', padding: 0, display: 'block' }}
             >
-              <img src="/card-yes-no.jpg" alt="Yes/No Tarot" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src="/yes-no-widget.png" alt="Yes/No Tarot" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </button>
 
             <button
               onClick={onThreeCard}
               style={{ flex: 1, maxHeight: 88, minHeight: 64, borderRadius: 12, border: 'none', overflow: 'hidden', cursor: 'pointer', width: '100%', padding: 0, display: 'block' }}
             >
-              <img src="/card-three-spread.jpg" alt="3-card spread" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img src="/three-card-widget.png" alt="3-card spread" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </button>
           </div>
         </div>

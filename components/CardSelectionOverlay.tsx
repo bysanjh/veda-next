@@ -12,7 +12,7 @@ const RA = {
   threeEllipse50: 'https://www.figma.com/api/mcp/asset/4d6fddd6-e965-42ec-9e90-570ef89b0a3b',
   threeEllipse51: 'https://www.figma.com/api/mcp/asset/4dafb7cd-e667-46a4-9d54-53fed8441c9f',
   // yes/no reveal
-  moonCardYN:     'https://www.figma.com/api/mcp/asset/f1dc37cd-e63f-42a1-94f9-a6892a1fbbd0',
+  moonCardYN:     'https://www.figma.com/api/mcp/asset/5a6b5798-cb6a-4ba6-9029-f4bea04ec4ac',
   ynEllipse50:    'https://www.figma.com/api/mcp/asset/5879876c-b738-45c1-bfde-bcf7100e5d75',
   ynEllipse51:    'https://www.figma.com/api/mcp/asset/b9dfc241-bc02-42d3-86ac-a38b270cbf5d',
 }
@@ -147,9 +147,9 @@ const THUMB_H   = 142
 const PAGER_W   = 354
 
 const CARD_READINGS = [
-  { label: 'Moon (Past)',       body: 'Confusion and doubt clouded your judgment. The path forward was obscured by illusion.' },
-  { label: 'Empress (Present)', body: "You're stepping into clarity and self-trust. Abundance is available to you now." },
-  { label: 'Tower (Future)',    body: 'A shake-up clears the way for something stronger. What breaks was never truly yours.' },
+  { label: 'Moon (Past)',       body: 'Confusion and doubt clouded your judgment.' },
+  { label: 'Empress (Present)', body: "You're stepping into clarity and self-trust." },
+  { label: 'Tower (Future)',    body: 'A shake-up clears the way for something stronger.' },
 ]
 const CARD_IMAGES = [RA.jupiterCard, RA.moonCard3, RA.marsCard]
 
@@ -177,9 +177,11 @@ export default function CardSelectionOverlay({
   const [showReading, setShowReading]   = useState(false)
   const [activeReading, setActiveReading] = useState(0)
 
-  const isDragging  = useRef(false)
-  const dragStart   = useRef(0)
-  const offsetStart = useRef(0)
+  const isDragging      = useRef(false)
+  const dragStart       = useRef(0)
+  const offsetStart     = useRef(0)
+  const carouselSwipeX  = useRef(0)
+  const carouselSwipeY  = useRef(0)
   const MIN_PAN = -X_STEP * 6
   const MAX_PAN =  X_STEP * 6
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
@@ -240,6 +242,18 @@ export default function CardSelectionOverlay({
     setPanOffset(clamp(offsetStart.current + e.touches[0].clientX - dragStart.current, MIN_PAN, MAX_PAN))
   }
 
+  const onCarouselTouchStart = (e: React.TouchEvent) => {
+    carouselSwipeX.current = e.touches[0].clientX
+    carouselSwipeY.current = e.touches[0].clientY
+  }
+  const onCarouselTouchEnd = (e: React.TouchEvent) => {
+    const dx = carouselSwipeX.current - e.changedTouches[0].clientX
+    const dy = Math.abs(carouselSwipeY.current - e.changedTouches[0].clientY)
+    if (Math.abs(dx) > 40 && Math.abs(dx) > dy) {
+      setActiveReading(prev => dx > 0 ? (prev + 1) % 3 : (prev + 2) % 3)
+    }
+  }
+
   const isReveal = phase === PHASE.REVEAL
 
   return (
@@ -254,7 +268,7 @@ export default function CardSelectionOverlay({
       {/* Sheet — fixed 402px wide, always centered (matches Figma mobile frame) */}
       <div style={{
         position: 'absolute', bottom: 0, left: '50%', width: 402,
-        height: 730,
+        height: 'min(730px, calc(100dvh - 121px))',
         transform: `translateX(-50%) translateY(${sheetY}%)`,
         transition: 'transform 0.65s cubic-bezier(0.32,0.72,0,1)', zIndex: 30,
       }}>
@@ -420,45 +434,56 @@ export default function CardSelectionOverlay({
                 <motion.div
                   key="reveal-yn"
                   initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 0.35 } }}
-                  style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}
+                  style={{ position: 'absolute', inset: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
                 >
-                  {/* Glow — ellipse50 (large purple blob) + ellipse51 (circular, centered on card) */}
-                  <div style={{ position: 'absolute', left: -76, top: -187, width: 509, height: 347, pointerEvents: 'none', zIndex: 0 }}>
-                    <img src={RA.ynEllipse50} alt="" style={{ position: 'absolute', inset: '-12.13% -8.27%', width: '116.6%', height: '124.2%' }} />
-                  </div>
-                  <div style={{ position: 'absolute', top: 67, left: 30, width: 342, height: 342, pointerEvents: 'none', zIndex: 0 }}>
-                    <img src={RA.ynEllipse51} alt="" style={{ position: 'absolute', inset: '-29.2%', width: '158.4%', height: '158.4%' }} />
-                  </div>
+                  {/* Circular glow — decorative, absolute */}
+                  <div style={{
+                    position: 'absolute', left: '50%', transform: 'translateX(-50%)',
+                    top: 33, width: 420, height: 420,
+                    pointerEvents: 'none', zIndex: 0,
+                    background: 'radial-gradient(circle, rgba(110,95,215,0.58) 0%, rgba(80,65,175,0.30) 40%, rgba(60,50,140,0.08) 66%, transparent 82%)',
+                  }} />
 
-                  {/* 3D flip */}
-                  <div style={{ position: 'absolute', top: 89, left: '50%', transform: 'translateX(-50%)', width: 197, height: 295, perspective: 900, zIndex: 2 }}>
+                  {/* Spacer below the "Your card" header */}
+                  <div style={{ flexShrink: 0, height: 80 }} />
+
+                  {/* Card — compact size to leave generous room for reading text */}
+                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 10, zIndex: 2 }}>
                     <div style={{
-                      width: '100%', height: '100%', position: 'relative', transformStyle: 'preserve-3d',
-                      transform: cardFlipped ? 'rotateY(0deg)' : 'rotateY(180deg)',
-                      transition: 'transform 0.7s cubic-bezier(0.4,0,0.2,1)',
+                      width: 138,
+                      height: 207,
+                      perspective: 900,
                     }}>
-                      <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', borderRadius: 10, overflow: 'hidden', boxShadow: '0 24px 64px rgba(0,0,0,0.7), 0 0 48px rgba(147,112,219,0.22)' } as React.CSSProperties}>
-                        <img src={RA.moonCardYN} alt="The Moon" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                      </div>
-                      <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)', borderRadius: 10, overflow: 'hidden' } as React.CSSProperties}>
-                        <CardBack />
+                      <div style={{
+                        width: '100%', height: '100%', position: 'relative', transformStyle: 'preserve-3d',
+                        transform: cardFlipped ? 'rotateY(0deg)' : 'rotateY(180deg)',
+                        transition: 'transform 0.7s cubic-bezier(0.4,0,0.2,1)',
+                      }}>
+                        <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', borderRadius: 10, overflow: 'hidden', boxShadow: '0 24px 64px rgba(0,0,0,0.7), 0 0 48px rgba(147,112,219,0.22)' } as React.CSSProperties}>
+                          <img src={RA.moonCardYN} alt="The Moon" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        </div>
+                        <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)', borderRadius: 10, overflow: 'hidden' } as React.CSSProperties}>
+                          <CardBack />
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Reading panel */}
+                  {/* Reading panel — fills remaining space */}
                   <motion.div
                     initial={{ opacity: 0, y: 14 }}
                     animate={showReading ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
                     transition={{ duration: 0.45 }}
-                    style={{ position: 'absolute', top: 415, left: 24, right: 24, bottom: 16, display: 'flex', flexDirection: 'column' }}
+                    style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', paddingLeft: 24, paddingRight: 24, paddingBottom: 'max(16px, env(safe-area-inset-bottom, 0px))', zIndex: 2 }}
                   >
-                    <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 22, color: '#fff', letterSpacing: -1.1, lineHeight: 'normal', marginBottom: 12, flexShrink: 0 }}>
-                      The Moon pulled you aside.
+                    {/* Heading — always visible, not inside scroll */}
+                    <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 20, color: '#fff', letterSpacing: -1, lineHeight: 'normal', margin: '0 0 10px', flexShrink: 0 }}>
+                      You&apos;ve pulled The Moon card.{'\n'}This is a NO.
                     </p>
-                    <div style={{ flex: 1, overflowY: 'auto', marginBottom: 16 }}>
+                    {/* Reading body — scrolls only if unusually long */}
+                    <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginBottom: 10 }}>
                       {revealText ? (
-                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#fff', letterSpacing: -0.48, lineHeight: '1.45', margin: 0, whiteSpace: 'pre-wrap' }}>
+                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: '#fff', letterSpacing: -0.42, lineHeight: '1.4', margin: 0, whiteSpace: 'pre-wrap' }}>
                           {revealText}
                         </p>
                       ) : (
@@ -467,7 +492,7 @@ export default function CardSelectionOverlay({
                         </span>
                       )}
                     </div>
-                    <button onClick={onAnotherReading} style={{ background: '#4c48a9', borderRadius: 8, padding: '16px', border: 'none', cursor: 'pointer', width: '100%', flexShrink: 0, fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 18, color: '#fff', letterSpacing: -0.72 }}>
+                    <button onClick={onAnotherReading} style={{ background: '#372e6a', borderRadius: 8, padding: '12px 0', border: 'none', cursor: 'pointer', width: '100%', flexShrink: 0, fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 17, color: '#fff', letterSpacing: -0.68 }}>
                       Get another reading
                     </button>
                   </motion.div>
@@ -483,108 +508,107 @@ export default function CardSelectionOverlay({
                 <motion.div
                   key="reveal-3c"
                   initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { duration: 0.35 } }}
-                  style={{ position: 'absolute', inset: 0 }}
+                  style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}
+                  onTouchStart={onCarouselTouchStart}
+                  onTouchEnd={onCarouselTouchEnd}
                 >
-                  {/* Glow blobs — always centered behind Moon card */}
-                  <div style={{ position: 'absolute', left: -76, top: -187, width: 509, height: 347, pointerEvents: 'none', zIndex: 0 }}>
-                    <img src={RA.threeEllipse50} alt="" style={{ position: 'absolute', inset: '-12.13% -8.27%', width: '116.6%', height: '124.2%' }} />
-                  </div>
-                  <div style={{ position: 'absolute', left: -12, top: 56, width: 426, height: 263, pointerEvents: 'none', zIndex: 0 }}>
-                    <img src={RA.threeEllipse51} alt="" style={{ position: 'absolute', inset: '-42.19% -26.04%', width: '152.08%', height: '184.38%' }} />
-                  </div>
-
-                  {/* Three cards — flex row, centered, equal size */}
+                  {/* Glow — wide ellipse behind cards */}
                   <div style={{
-                    position: 'absolute',
-                    top: 92,
-                    left: 0, right: 0,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    gap: 8,
-                    padding: '0 12px',
-                    boxSizing: 'border-box',
-                    overflow: 'visible',
-                    zIndex: 2,
-                  }}>
-                    {CARD_IMAGES.map((src, i) => (
-                      <motion.div
-                        key={i}
-                        onClick={() => goToReading(i)}
-                        animate={{
-                          scale: activeReading === i ? 1.04 : 1,
-                          boxShadow: activeReading === i
-                            ? '0 8px 24px rgba(139,92,246,0.4)'
-                            : '0 0 0 rgba(0,0,0,0)',
-                        }}
-                        transition={{ duration: 0.25, ease: 'easeInOut' }}
-                        style={{
-                          flex: 1,
-                          minWidth: 0,
-                          maxWidth: 'calc(33.333% - 6px)',
-                          aspectRatio: '2/3',
-                          borderRadius: 12,
-                          overflow: 'hidden',
-                          cursor: 'pointer',
-                          border: activeReading === i
-                            ? '1px solid rgba(139,92,246,0.5)'
-                            : '1px solid rgba(255,255,255,0.1)',
-                          transitionProperty: 'border-color',
-                          transitionDuration: '0.25s',
-                          transformOrigin: 'center center',
-                        }}
-                      >
-                        <img src={src} alt={POSITIONS[i]} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                      </motion.div>
-                    ))}
+                    position: 'absolute', left: -12, top: 56, width: 426, height: 263,
+                    pointerEvents: 'none', zIndex: 0,
+                    background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(110,95,215,0.55) 0%, rgba(80,65,175,0.25) 44%, rgba(60,50,140,0.07) 70%, transparent 85%)',
+                  }} />
+
+                  {/* Swipe carousel — all 3 cards anchored to center, x-offset drives position */}
+                  <div style={{ position: 'absolute', top: 92, left: 0, right: 0, height: 186 }}>
+                    {CARD_IMAGES.map((src, i) => {
+                      const slot = (i - activeReading + 3) % 3
+                      // slot 0=center, slot 1=right (+117px), slot 2=left (-117px)
+                      const xOff = slot === 0 ? 0 : slot === 1 ? 117 : -117
+                      const isCenter = slot === 0
+                      return (
+                        <motion.div
+                          key={i}
+                          style={{
+                            position: 'absolute', left: '50%', marginLeft: -61.5, top: 0,
+                            width: 123, height: 184, borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
+                            zIndex: isCenter ? 2 : 1,
+                            boxShadow: isCenter ? '19px 0 36px rgba(0,0,0,0.4), -19px 0 36px rgba(0,0,0,0.4)' : 'none',
+                          }}
+                          animate={{ x: xOff }}
+                          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                          onClick={() => setActiveReading(i)}
+                        >
+                          <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                          <motion.div
+                            animate={{ opacity: isCenter ? 0 : 1 }}
+                            transition={{ duration: 0.2 }}
+                            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', borderRadius: 8 }}
+                          />
+                        </motion.div>
+                      )
+                    })}
                   </div>
 
                   {/* Swipe hint */}
                   <div style={{ position: 'absolute', top: 284, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 3, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
                     <img src={ASSETS.swipeIcon} alt="" style={{ width: 20, height: 20 }} />
                     <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 12, color: '#7d7e83', lineHeight: 1.2, margin: 0 }}>
-                      Tap a card to read it
+                      Swipe to switch cards
                     </p>
                   </div>
 
-                  {/* Per-card readings — active card full white, inactive dimmed */}
-                  <div style={{ position: 'absolute', top: 320, left: 24, right: 24, display: 'flex', flexDirection: 'column', gap: 12, zIndex: 2 }}>
-                    {CARD_READINGS.map((r, i) => (
-                      <button
-                        key={i}
-                        onClick={() => goToReading(i)}
-                        style={{ display: 'flex', flexDirection: 'column', gap: 6, textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                  {/* Scrollable content */}
+                  <div className="no-scrollbar" style={{ position: 'absolute', top: 312, left: 0, right: 0, bottom: 88, overflowY: 'auto', padding: '0 24px' }}>
+                    {/* Per-card reading — fades when active card changes */}
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={activeReading}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.2 }}
+                        style={{ marginBottom: 20 }}
                       >
-                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: '#ffffff', opacity: activeReading === i ? 1 : 0.35, transition: 'opacity 0.25s ease', letterSpacing: -0.42, lineHeight: 'normal', margin: 0 }}>{r.label}</p>
-                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#ffffff', opacity: activeReading === i ? 1 : 0.35, transition: 'opacity 0.25s ease', letterSpacing: -0.48, lineHeight: 1.45, margin: 0 }}>{r.body}</p>
-                      </button>
-                    ))}
-                  </div>
+                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.6)', letterSpacing: -0.42, lineHeight: 'normal', margin: '0 0 6px' }}>
+                          {CARD_READINGS[activeReading].label}
+                        </p>
+                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#fff', letterSpacing: -0.48, lineHeight: 1.45, margin: 0 }}>
+                          {CARD_READINGS[activeReading].body}
+                        </p>
+                      </motion.div>
+                    </AnimatePresence>
 
-                  {/* Summary (from API) */}
-                  <div style={{ position: 'absolute', left: 24, top: 491, right: 24, display: 'flex', flexDirection: 'column', gap: 6, zIndex: 2 }}>
-                    <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: 'rgba(255,255,255,0.5)', letterSpacing: -0.48, lineHeight: 'normal', margin: 0 }}>
-                      Summarized reading:
-                    </p>
-                    {revealText ? (
-                      <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#fff', letterSpacing: -0.48, lineHeight: 1.45, margin: 0, whiteSpace: 'pre-wrap' }}>
-                        {revealText}
+                    {/* Summarized reading — shared for all cards */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.5)', letterSpacing: -0.42, lineHeight: 'normal', margin: 0 }}>
+                        Summarized reading:
                       </p>
-                    ) : (
-                      <span style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-                        <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
-                      </span>
-                    )}
+                      {revealText ? (
+                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#fff', letterSpacing: -0.48, lineHeight: 1.45, margin: 0, whiteSpace: 'pre-wrap' }}>
+                          {revealText}
+                        </p>
+                      ) : (
+                        <span style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+                          <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* CTA */}
-                  <button
-                    onClick={onAnotherReading}
-                    style={{ position: 'absolute', top: 651, left: '50%', transform: 'translateX(-50%)', width: PAGER_W, background: '#4c48a9', borderRadius: 8, padding: '16px', border: 'none', cursor: 'pointer', fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 18, color: '#fff', letterSpacing: -0.72 }}
-                  >
-                    Get another reading
-                  </button>
+                  {/* Button pinned at bottom */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 24px 24px', background: 'linear-gradient(to top, #080808 65%, transparent)' }}>
+                    <button
+                      onClick={onAnotherReading}
+                      style={{
+                        width: '100%', background: '#372e6a', borderRadius: 8, padding: '16px 0',
+                        border: 'none', cursor: 'pointer',
+                        fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 18, color: '#fff', letterSpacing: -0.72,
+                      }}
+                    >
+                      Get another reading
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

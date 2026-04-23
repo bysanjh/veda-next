@@ -57,6 +57,7 @@ interface Message {
   verdict?: string
   summary?: string
   cardImageSrc?: string
+  mode?: 'yes_no' | 'three_card'
 }
 
 async function streamVedaResponse(
@@ -107,8 +108,10 @@ export default function VedaPage() {
   const [streamingText, setStreamingText] = useState('')
   const scrollRef = useRef<HTMLDivElement>(null)
   const msgCounter = useRef(0)
+  const [scrolled, setScrolled] = useState(false)
 
   const [onboardingState, setOnboardingState] = useState<'login' | 'onboarding' | 'done'>('login')
+  const [opheliaIntroduced, setOpheliaIntroduced] = useState(false)
 
   const nextId = () => {
     msgCounter.current += 1
@@ -181,8 +184,8 @@ export default function VedaPage() {
         { id: opMsgId, type: 'ophelia_msg', text: 'Got it. Now choose your card from the deck below.' },
       ])
       setCardMode('yes_no')
-      setShowCardOverlay(true)
       setScreen('yes_no_cards')
+      setTimeout(() => setShowCardOverlay(true), 900)
       return
     }
 
@@ -195,8 +198,8 @@ export default function VedaPage() {
         { id: opMsgId, type: 'ophelia_msg', text: 'Let the cards guide you. Select three from the deck.' },
       ])
       setCardMode('three_card')
-      setShowCardOverlay(true)
       setScreen('three_card_cards')
+      setTimeout(() => setShowCardOverlay(true), 900)
       return
     }
 
@@ -226,10 +229,18 @@ export default function VedaPage() {
 
   function handleTarotPill() {
     addMessage({ type: 'user', text: 'Tarot Reading' })
-    setScreen('tarot_loading')
-    askVeda('Tarot Reading', () => {
-      setShowOpheliaOverlay(true)
-    })
+    if (!opheliaIntroduced) {
+      setScreen('tarot_loading')
+      askVeda('Tarot Reading', () => {
+        setTimeout(() => setShowOpheliaOverlay(true), 800)
+      })
+    } else {
+      setScreen('reading_choice')
+      staggerAdd([
+        { type: 'ophelia_msg', text: 'What kind of reading would you like?' },
+        { type: 'tarot_type_selector' },
+      ], 400)
+    }
   }
 
   function handleHoroscopePill() {
@@ -268,11 +279,12 @@ export default function VedaPage() {
 
   function handleYesNo() {
     setShowOpheliaOverlay(false)
+    setOpheliaIntroduced(true)
     staggerAdd([
       { type: 'ophelia_entered' },
       {
         type: 'ophelia_msg',
-        text: "A Yes / No reading \u2014 one card, one clear answer.\n\nBefore we draw, what does your heart need clarity on? Take a breath and write it out.",
+        text: "A Yes / No reading — one card, one clear answer.\n\nBefore we draw, what does your heart need clarity on? Take a breath and write it out.",
       },
     ], 450)
     setTimeout(() => setScreen('yes_no_question'), 500)
@@ -280,6 +292,7 @@ export default function VedaPage() {
 
   function handleThreeCard() {
     setShowOpheliaOverlay(false)
+    setOpheliaIntroduced(true)
     staggerAdd([
       { type: 'ophelia_entered' },
       {
@@ -305,21 +318,11 @@ export default function VedaPage() {
     )
   }
 
-  function handleCloseReveal() {
-    const reading = revealText
-    const mode = cardMode
-    setShowCardOverlay(false)
-    setScreen('card_revealed')
-
+  function addReadingPreview(reading: string, mode: 'yes_no' | 'three_card') {
     const cardImageSrc = mode === 'yes_no' ? ASSETS.moonCard : ASSETS.moonCard3
-    const verdict = mode === 'yes_no' ? 'The Moon says no' : 'Moon \u00b7 Empress \u00b7 Tower'
+    const verdict = mode === 'yes_no' ? 'The Moon says no' : 'Moon · Empress · Tower'
     const cardName = mode === 'yes_no' ? 'The Moon' : 'Three Card Spread'
     const summary = reading.trim().length > 0 ? reading.trim() : 'Your reading is ready...'
-
-    const vedaFollowUp = mode === 'yes_no'
-      ? `I noticed that you drew The Moon, which indicates an unclear or uncertain response. Would you like to explore its meaning further, or is there something else you\u2019d like to discuss today?`
-      : `I noticed that you drew The Moon, the Empress, and the Tower \u2014 each reflecting a unique energy across your past, present, and future. Would you like to explore their meanings further, or is there something else you\u2019d like to discuss today?`
-
     setMessages(prev => [...prev, {
       id: nextId(),
       type: 'reading_preview' as const,
@@ -327,8 +330,22 @@ export default function VedaPage() {
       verdict,
       summary,
       cardImageSrc,
+      mode,
       onViewReading: () => { setRevealText(reading); setShowCardReveal(true) },
     }])
+  }
+
+  function handleCloseReveal() {
+    const reading = revealText
+    const mode = cardMode
+    setShowCardOverlay(false)
+    setScreen('card_revealed')
+
+    addReadingPreview(reading, mode)
+
+    const vedaFollowUp = mode === 'yes_no'
+      ? `I noticed that you drew The Moon, which indicates an unclear or uncertain response. Would you like to explore its meaning further, or is there something else you'd like to discuss today?`
+      : `I noticed that you drew The Moon, the Empress, and the Tower — each reflecting a unique energy across your past, present, and future. Would you like to explore their meanings further, or is there something else you'd like to discuss today?`
 
     setTimeout(() => {
       setMessages(prev => [...prev, {
@@ -348,27 +365,22 @@ export default function VedaPage() {
   }
 
   function handleAnotherReadingFromReveal() {
-    setShowCardOverlay(false)
-    setScreen('reading_choice')
-    staggerAdd([
-      {
-        type: 'ophelia_msg',
-        text: "Let\u2019s do another tarot reading. I will be spreading the cards for you today. Before we get deeper into your reading, what type of Tarot card reading would you like to do today?",
-      },
-      { type: 'tarot_type_selector' },
-    ], 450)
+    handleAnotherReading()
   }
 
   function handleAnotherReading() {
+    const reading = revealText
+    const mode = cardMode
+    addReadingPreview(reading, mode)
     setShowCardOverlay(false)
     setScreen('reading_choice')
     staggerAdd([
       {
         type: 'ophelia_msg',
-        text: "Let\u2019s do another tarot reading. I will be spreading the cards for you today. Before we get deeper into your reading, what type of Tarot card reading would you like to do today?",
+        text: "Let's do another reading. Which type would you like?",
       },
       { type: 'tarot_type_selector' },
-    ], 450)
+    ], 400)
   }
 
   function handleStartYesNo() {
@@ -376,7 +388,7 @@ export default function VedaPage() {
     staggerAdd([
       {
         type: 'ophelia_msg',
-        text: "A Yes / No reading \u2014 one card, one clear answer.\n\nBefore we draw, what does your heart need clarity on? Take a breath and write it out.",
+        text: "A Yes / No reading — one card, one clear answer.\n\nBefore we draw, what does your heart need clarity on? Take a breath and write it out.",
       },
     ], 0)
     setTimeout(() => setScreen('yes_no_question'), 200)
@@ -420,11 +432,26 @@ export default function VedaPage() {
       <StarfieldBg />
       <Header />
 
+      {/* Scroll-aware blur under header */}
+      {scrolled && (
+        <div
+          className="absolute left-0 right-0 z-10 pointer-events-none"
+          style={{
+            top: '100.768px',
+            height: '41.808px',
+            background: 'linear-gradient(to bottom, rgba(1,1,7,0.5), transparent)',
+            backdropFilter: 'blur(2.144px)',
+            WebkitBackdropFilter: 'blur(2.144px)',
+          }}
+        />
+      )}
+
       {/* Scrollable chat area */}
       <div
         ref={scrollRef}
         className="absolute inset-x-0 overflow-y-auto no-scrollbar"
         style={{ top: 101, bottom: 120, paddingBottom: 24 }}
+        onScroll={() => setScrolled((scrollRef.current?.scrollTop ?? 0) > 0)}
       >
         <div className="flex flex-col gap-[20px] px-[16px] pt-[20px]">
           {messages.length === 0 && screen === 'home' && (
@@ -507,6 +534,7 @@ export default function VedaPage() {
                   summary={msg.summary ?? ''}
                   cardImageSrc={msg.cardImageSrc ?? ASSETS.moonCard}
                   onViewReading={msg.onViewReading}
+                  mode={msg.mode ?? 'yes_no'}
                 />
               )
             }
@@ -577,7 +605,7 @@ export default function VedaPage() {
             staggerAdd([
               {
                 type: 'ophelia_msg',
-                text: "Let\u2019s do another tarot reading. I will be spreading the cards for you today. Before we get deeper into your reading, what type of Tarot card reading would you like to do today?",
+                text: "Let's do another reading. Which type would you like?",
               },
               { type: 'tarot_type_selector' },
             ], 400)

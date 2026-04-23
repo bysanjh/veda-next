@@ -96,25 +96,6 @@ export default function HoroscopeContent({ reading, onFollowUp }: HoroscopeConte
         )}
       </div>
 
-      {/* Follow-up prompt */}
-      <p
-        className="font-roboto font-normal text-white text-[18px] m-0"
-        style={{ letterSpacing: '-0.54px', fontVariationSettings: "'wdth' 100" }}
-      >
-        Do you want to know more about how to make the move or know how your day will look tomorrow?
-      </p>
-      <div className="flex flex-col gap-[8px]">
-        {['Tell me more about making the move', 'How will tomorrow look?'].map((q) => (
-          <button
-            key={q}
-            onClick={() => onFollowUp(q)}
-            className="text-left font-roboto text-[16px] hover:opacity-80 transition-opacity flex items-center gap-[4px]"
-            style={{ color: 'rgba(180,160,255,0.85)', letterSpacing: '-0.48px', fontVariationSettings: "'wdth' 100" }}
-          >
-            <span style={{ fontSize: 18 }}>↗</span> {q}
-          </button>
-        ))}
-      </div>
     </div>
   )
 }

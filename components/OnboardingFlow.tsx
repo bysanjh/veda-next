@@ -143,7 +143,7 @@ function CtaButton({ label, disabled, isLoading, onClick }: {
         height: 52,
         borderRadius: 10,
         border: 'none',
-        background: inactive ? 'rgba(76,72,169,0.42)' : '#4c48a9',
+        background: inactive ? 'rgba(55,46,106,0.42)' : '#372e6a',
         color: '#ffffff',
         fontSize: 18,
         fontWeight: 400,

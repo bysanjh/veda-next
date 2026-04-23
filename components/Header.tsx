@@ -43,17 +43,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Gradient blur strip below header */}
-      <div
-        className="absolute left-0 right-0 z-10 pointer-events-none"
-        style={{
-          top: '100.768px',
-          height: '41.808px',
-          background: 'linear-gradient(to bottom, rgba(1,1,7,0.5), transparent)',
-          backdropFilter: 'blur(2.144px)',
-          WebkitBackdropFilter: 'blur(2.144px)',
-        }}
-      />
     </>
   )
 }
