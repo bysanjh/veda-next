@@ -176,7 +176,7 @@ export default function ThreeCardResultOverlay({
         style={{
           position: 'absolute', top: 651, left: '50%', transform: 'translateX(-50%)',
           width: 354, height: 52,
-          background: '#4c48a9',
+          background: '#372e6a',
           borderRadius: 8,
           border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2,
