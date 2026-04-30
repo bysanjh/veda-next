@@ -46,7 +46,9 @@ type Phase = typeof PHASE[keyof typeof PHASE]
 function CardBack() {
   return (
     <div style={{ width: '100%', height: '100%', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
-      <img src="/card-back.svg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+      {/* Scale slightly larger so the SVG's right/bottom drop-shadow is clipped,
+          leaving the card rectangle centered and filling the frame */}
+      <img src="/card-back.svg" alt="" style={{ position: 'absolute', top: 0, left: 0, width: '107%', height: '104%' }} />
     </div>
   )
 }
@@ -320,14 +322,11 @@ export default function CardSelectionOverlay({
                 {/* Slots */}
                 {mode === 'yes_no' ? (
                   <div style={{
-                    position: 'absolute', top: 85, left: '50%',
-                    transform: phase === PHASE.SELECT
-                      ? 'translateX(-50%) translateY(calc(min(730px, 100dvh - 121px) / 2 - 233.5px))'
-                      : 'translateX(-50%)',
+                    position: 'absolute', top: 85, left: '50%', transform: 'translateX(-50%)',
                     width: 198, height: 297, background: 'rgba(217,217,217,0.06)',
                     border: `1.13px solid ${selectedCard !== null ? '#747474' : '#282828'}`,
                     borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'transform 0.5s ease, border-color 0.3s', zIndex: 5, overflow: 'hidden',
+                    transition: 'border-color 0.3s', zIndex: 5, overflow: 'hidden',
                   }}>
                     {selectedCard !== null ? (
                       <div style={{ width: '100%', height: '100%' }}><CardBack /></div>
