@@ -177,11 +177,7 @@ export default function ChatBar({
                 borderRadius: 100, border: 'none', cursor: 'pointer',
                 padding: '7px 10px', display: 'flex', gap: 2, alignItems: 'center', flexShrink: 0,
               }}>
-                <div style={{ position: 'relative', width: 20.93, height: 20.93, flexShrink: 0 }}>
-                  <div style={{ position: 'absolute', inset: '14.59%' }}>
-                    <img src={A.horoIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
-                  </div>
-                </div>
+                <img src={A.horoIcon} alt="" style={{ width: 20.93, height: 20.93, display: 'block', flexShrink: 0 }} />
                 <span style={{ fontFamily: 'var(--font-roboto)', fontWeight: 400, fontSize: 14, color: 'white', lineHeight: 1 }}>Horoscope</span>
               </button>
             </div>
