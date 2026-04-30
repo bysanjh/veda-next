@@ -45,8 +45,15 @@ const DECK = buildDeck()
 const PHASE = { SHUFFLE: 'shuffle', FAN: 'fan', SELECT: 'select', REVEAL: 'reveal' } as const
 type Phase = typeof PHASE[keyof typeof PHASE]
 
-// Shuffle sub-phases
-const SHUFFLE_STEP = { STACK: 'stack', RIFFLE: 'riffle', COLLECT: 'collect', SPREAD: 'spread' } as const
+// Shuffle sub-phases - realistic riffle shuffle
+const SHUFFLE_STEP = { 
+  STACK: 'stack',           // Cards gather into a stack
+  SPLIT: 'split',           // Split into two halves (left/right hands)
+  RIFFLE_UP: 'riffle_up',   // Both halves rise up, tilted
+  RIFFLE_DOWN: 'riffle_down', // Cards interleave falling down
+  COLLECT: 'collect',       // Collect back together
+  SPREAD: 'spread'          // Spread into arc
+} as const
 type ShuffleStep = typeof SHUFFLE_STEP[keyof typeof SHUFFLE_STEP]
 
 // ── Card back ─────────────────────────────────────────────────────────────────
@@ -98,71 +105,115 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
 
   // Animation states based on phase and shuffle step
   const getAnimation = () => {
-    // SHUFFLE phase animations
+    // SHUFFLE phase animations - realistic riffle shuffle
     if (phase === PHASE.SHUFFLE) {
       const stackX = ARC_CX - CARD_W / 2
-      const stackY = 280 - index * 0.8 // Stacked with slight offset
+      const stackY = 200 // Center stack position
+      const isLeftHalf = index < CARD_COUNT / 2
+      const halfIndex = isLeftHalf ? index : index - Math.floor(CARD_COUNT / 2)
       
+      // STACK - cards gather into neat stack
       if (shuffleStep === SHUFFLE_STEP.STACK) {
         return {
           x: stackX,
-          y: stackY,
-          rotate: (Math.random() - 0.5) * 2,
+          y: stackY - index * 0.6,
+          rotate: (Math.random() - 0.5) * 1.5,
           scaleY: -1,
           scaleX: 1,
           opacity: 1,
           transition: { 
-            duration: 0.4,
-            delay: index * 0.015,
+            duration: 0.35,
+            delay: index * 0.012,
             ease: [0.4, 0, 0.2, 1]
           },
         }
       }
       
-      if (shuffleStep === SHUFFLE_STEP.RIFFLE) {
-        // Riffle shuffle - cards split left/right and interleave
-        const isLeft = index % 2 === 0
-        const riffleOffset = isLeft ? -60 : 60
-        const riffleY = stackY - 20 + Math.random() * 10
-        const riffleRotate = (isLeft ? -12 : 12) + (Math.random() - 0.5) * 6
-        
+      // SPLIT - split into two halves (left and right hands)
+      if (shuffleStep === SHUFFLE_STEP.SPLIT) {
+        const splitOffset = isLeftHalf ? -55 : 55
+        const tilt = isLeftHalf ? 8 : -8
         return {
-          x: stackX + riffleOffset,
-          y: riffleY,
-          rotate: riffleRotate,
+          x: stackX + splitOffset,
+          y: stackY - halfIndex * 0.5,
+          rotate: tilt,
           scaleY: -1,
           scaleX: 1,
           opacity: 1,
           transition: {
-            duration: 0.35,
-            delay: index * 0.012,
+            duration: 0.25,
+            delay: 0.02,
             type: 'spring',
-            stiffness: 300,
-            damping: 20,
+            stiffness: 400,
+            damping: 28,
           },
         }
       }
       
-      if (shuffleStep === SHUFFLE_STEP.COLLECT) {
+      // RIFFLE_UP - both halves rise up, tilted inward like hands lifting
+      if (shuffleStep === SHUFFLE_STEP.RIFFLE_UP) {
+        const splitOffset = isLeftHalf ? -45 : 45
+        const tilt = isLeftHalf ? 15 : -15
         return {
-          x: stackX,
-          y: stackY + 10,
-          rotate: (Math.random() - 0.5) * 3,
+          x: stackX + splitOffset,
+          y: stackY - 80 - halfIndex * 0.4,
+          rotate: tilt,
           scaleY: -1,
           scaleX: 1,
           opacity: 1,
           transition: {
-            duration: 0.3,
-            delay: (CARD_COUNT - index) * 0.015,
+            duration: 0.2,
             type: 'spring',
-            stiffness: 280,
+            stiffness: 350,
             damping: 22,
           },
         }
       }
       
+      // RIFFLE_DOWN - cards interleave falling down one by one
+      if (shuffleStep === SHUFFLE_STEP.RIFFLE_DOWN) {
+        // Interleave: alternate between left and right halves
+        const interleaveIndex = isLeftHalf 
+          ? halfIndex * 2 
+          : halfIndex * 2 + 1
+        const fallDelay = (CARD_COUNT - interleaveIndex) * 0.025
+        
+        return {
+          x: stackX + (isLeftHalf ? -8 : 8) * (1 - interleaveIndex / CARD_COUNT),
+          y: stackY + 15 + interleaveIndex * 0.7,
+          rotate: (isLeftHalf ? 3 : -3) * (1 - interleaveIndex / CARD_COUNT),
+          scaleY: -1,
+          scaleX: 1,
+          opacity: 1,
+          transition: {
+            duration: 0.15,
+            delay: fallDelay,
+            ease: [0.2, 0, 0.4, 1],
+          },
+        }
+      }
+      
+      // COLLECT - tap/square up the deck
+      if (shuffleStep === SHUFFLE_STEP.COLLECT) {
+        return {
+          x: stackX,
+          y: stackY - index * 0.5,
+          rotate: 0,
+          scaleY: -1,
+          scaleX: 1,
+          opacity: 1,
+          transition: {
+            duration: 0.2,
+            delay: 0.05,
+            type: 'spring',
+            stiffness: 400,
+            damping: 30,
+          },
+        }
+      }
+      
+      // SPREAD - fan out into arc
       if (shuffleStep === SHUFFLE_STEP.SPREAD) {
-        // Spread out into arc
         return {
           x: arcX - CARD_W / 2,
           y: arcY - CARD_H / 2,
@@ -171,11 +222,11 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
           scaleX: 1,
           opacity: inView ? 1 : 0,
           transition: {
-            duration: 0.6,
-            delay: index * 0.04,
+            duration: 0.5,
+            delay: index * 0.035,
             type: 'spring',
-            stiffness: 200,
-            damping: 25,
+            stiffness: 180,
+            damping: 22,
           },
         }
       }
@@ -359,15 +410,17 @@ export default function CardSelectionOverlay({
     requestAnimationFrame(() => requestAnimationFrame(() => setSheetY(0)))
   }, [])
 
-  // Shuffle sequence timing
+  // Shuffle sequence timing - realistic riffle shuffle
   useEffect(() => {
-    // Stack → Riffle → Collect → Spread → FAN
+    // Stack → Split → Riffle Up → Riffle Down → Collect → Spread → FAN
     const timers: NodeJS.Timeout[] = []
     
-    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.RIFFLE), 500))
-    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.COLLECT), 900))
-    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.SPREAD), 1300))
-    timers.push(setTimeout(() => setPhase(PHASE.FAN), 2200))
+    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.SPLIT), 450))
+    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.RIFFLE_UP), 700))
+    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.RIFFLE_DOWN), 950))
+    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.COLLECT), 1550))
+    timers.push(setTimeout(() => setShuffleStep(SHUFFLE_STEP.SPREAD), 1850))
+    timers.push(setTimeout(() => setPhase(PHASE.FAN), 2800))
     
     return () => timers.forEach(clearTimeout)
   }, [])
