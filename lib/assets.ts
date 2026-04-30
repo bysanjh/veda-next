@@ -10,7 +10,7 @@ export const ASSETS = {
   logoBadge: 'https://www.figma.com/api/mcp/asset/5ff5010c-b868-4116-8bb1-e1675c4bbd5b',
 
   // Veda avatar
-  vedaAvatar: 'https://www.figma.com/api/mcp/asset/f687bdaa-652d-4108-b6e9-7a1ce341cb21',
+  vedaAvatar: '/veda-avatar.svg',
 
   // Chat bar icons
   plusIcon: 'https://www.figma.com/api/mcp/asset/e8e46eca-d9ec-4417-8a8e-9b8cd1fc055f',

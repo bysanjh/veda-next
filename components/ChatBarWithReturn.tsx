@@ -2,7 +2,7 @@
 import { useState } from 'react'
 
 const A = {
-  vedaAvatar:    'https://www.figma.com/api/mcp/asset/17a8ea19-f292-4433-928f-89b5fa14b995',
+  vedaAvatar:    '/veda-avatar.svg',
   arrowLeft:     'https://www.figma.com/api/mcp/asset/3ce7bc0f-6dc7-4082-ae38-fbc05d66c7c5',
   plusIcon:      'https://www.figma.com/api/mcp/asset/bafe9bca-5409-4a0d-bc9d-377386a95ebb',
   tarotIcon:     'https://www.figma.com/api/mcp/asset/f3a87d25-0bf5-4bb7-b0d2-b601d1ea45bb',
