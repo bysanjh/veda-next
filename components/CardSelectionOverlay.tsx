@@ -441,14 +441,14 @@ export default function CardSelectionOverlay({
                     position: 'absolute', left: '50%', transform: 'translateX(-50%)',
                     top: 33, width: 420, height: 420,
                     pointerEvents: 'none', zIndex: 0,
-                    background: 'radial-gradient(circle, rgba(110,95,215,0.58) 0%, rgba(80,65,175,0.30) 40%, rgba(60,50,140,0.08) 66%, transparent 82%)',
+                    background: 'radial-gradient(circle, rgba(114,129,188,0.22) 0%, rgba(114,129,188,0.10) 40%, rgba(114,129,188,0.03) 66%, transparent 82%)',
                   }} />
 
                   {/* Spacer below the "Your card" header */}
                   <div style={{ flexShrink: 0, height: 80 }} />
 
                   {/* Card — compact size to leave generous room for reading text */}
-                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 10, zIndex: 2 }}>
+                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 28, zIndex: 2 }}>
                     <div style={{
                       width: 198,
                       height: 297,
@@ -483,7 +483,7 @@ export default function CardSelectionOverlay({
                     {/* Reading body — scrolls only if unusually long */}
                     <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginBottom: 10 }}>
                       {revealText ? (
-                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: '#fff', letterSpacing: -0.42, lineHeight: '1.4', margin: 0, whiteSpace: 'pre-wrap' }}>
+                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 15.4, color: '#fff', letterSpacing: -0.46, lineHeight: '1.4', margin: 0, whiteSpace: 'pre-wrap' }}>
                           {revealText}
                         </p>
                       ) : (
