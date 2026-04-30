@@ -323,12 +323,12 @@ export default function CardSelectionOverlay({
                     position: 'absolute', top: 85, left: '50%',
                     transform: 'translateX(-50%)',
                     width: 198, height: 297, background: 'rgba(217,217,217,0.06)',
-                    border: `1.13px solid ${selectedCard !== null ? '#747474' : '#282828'}`,
+                    border: selectedCard !== null ? 'none' : '1.13px solid #282828',
                     borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'border-color 0.3s', zIndex: 5, overflow: 'hidden',
                   }}>
                     {selectedCard !== null ? (
-                      <div style={{ width: '100%', height: '100%' }}><CardBack /></div>
+                      <div style={{ width: '100%', height: '100%', border: 'none' }}><CardBack /></div>
                     ) : (
                       <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 13.5, color: 'rgba(255,255,255,0.2)', textAlign: 'center', letterSpacing: -0.41, width: 80, lineHeight: 1.4, margin: 0 }}>
                         Tap on a card to get reading
