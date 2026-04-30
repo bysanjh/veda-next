@@ -27,6 +27,9 @@ const ANG_STEP   = 5.5
 const ANG_CTR    = 0.83
 const CY_MIN     = 111
 const Y_CURVE    = 0.072
+const FAN_TOP_YES_NO = 382
+const FAN_TOP_THREE_CARD = 352
+const SHUFFLE_CENTER_Y = 128
 
 function buildDeck(count = CARD_COUNT) {
   const mid = (count - 1) / 2
@@ -38,6 +41,25 @@ function buildDeck(count = CARD_COUNT) {
   })
 }
 const DECK = buildDeck()
+
+function arcPose(virtualOffset: number) {
+  const angle = (virtualOffset / X_STEP) * ANG_STEP + ANG_CTR
+  return {
+    x: ARC_CX + virtualOffset - CARD_W / 2,
+    y: CY_MIN + Y_CURVE * Math.pow(angle - ANG_CTR, 2) - CARD_H / 2,
+    rotate: angle,
+  }
+}
+
+function shuffleOffset(index: number, pass: number) {
+  const dir = index % 2 === 0 ? 1 : -1
+  const layer = ((index * 7 + pass * 5) % 11) - 5
+  return {
+    x: dir * (18 + (index % 5) * 5) + layer * 2,
+    y: ((index + pass) % 4) * 3 - 6,
+    rotate: dir * (7 + (index % 4) * 2) + layer * 0.8,
+  }
+}
 
 const PHASE = { SHUFFLE: 'shuffle', FAN: 'fan', SELECT: 'select', REVEAL: 'reveal' } as const
 type Phase = typeof PHASE[keyof typeof PHASE]
@@ -61,38 +83,83 @@ interface FanCardProps {
   selectedCard: number | null   // yes_no: single selection
   selectedCards: number[]        // three_card: multi-selection
   panOffset: number
+  fanTop: number
   onHover: (i: number) => void
   onHoverEnd: () => void
   onTap: (i: number) => void
 }
 
-function FanCard({ index, phase, hoveredCard, selectedCard, selectedCards, panOffset, onHover, onHoverEnd, onTap }: FanCardProps) {
+function FanCard({ index, phase, hoveredCard, selectedCard, selectedCards, panOffset, fanTop, onHover, onHoverEnd, onTap }: FanCardProps) {
   const c = DECK[index]
-  const fanX   = ARC_CX + c.xOffset + panOffset
-  const inView = Math.abs(c.xOffset + panOffset) <= 260
+  const virtualOffset = c.xOffset + panOffset
+  const fan = arcPose(virtualOffset)
+  const inView = Math.abs(virtualOffset) <= 280
   const isHov  = hoveredCard === index && phase === PHASE.FAN
   const isSel  = selectedCard === index || selectedCards.includes(index)
+  const selectedOrder = selectedCards.indexOf(index)
+  const slotCenterX = selectedCard === index
+    ? ARC_CX
+    : selectedOrder >= 0
+      ? 24 + selectedOrder * (SLOT_W + SLOT_GAP) + SLOT_W / 2
+      : ARC_CX
+  const slotCenterY = selectedCard === index
+    ? 85 + 297 / 2 - fanTop
+    : 68 + SLOT_H / 2 - fanTop
+  const liftDelay = selectedCard === index ? 0 : Math.max(0, selectedOrder) * 0.08
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let anim: any
   if (phase === PHASE.SHUFFLE) {
+    const s1 = shuffleOffset(index, 1)
+    const s2 = shuffleOffset(index, 2)
+    const s3 = shuffleOffset(index, 3)
     anim = {
-      x: fanX - CARD_W / 2, y: c.cy - CARD_H / 2, rotate: c.angle, scaleY: -1, scaleX: 1,
-      opacity: inView ? 1 : 0,
-      transition: { delay: index * 0.04, duration: 0.55, ease: [0.32, 0.72, 0, 1] },
+      x: [
+        ARC_CX - CARD_W / 2,
+        ARC_CX - CARD_W / 2 + s1.x,
+        ARC_CX - CARD_W / 2 + s2.x,
+        ARC_CX - CARD_W / 2 + s3.x,
+        fan.x,
+      ],
+      y: [
+        SHUFFLE_CENTER_Y - CARD_H / 2,
+        SHUFFLE_CENTER_Y - CARD_H / 2 + s1.y,
+        SHUFFLE_CENTER_Y - CARD_H / 2 + s2.y,
+        SHUFFLE_CENTER_Y - CARD_H / 2 + s3.y,
+        fan.y,
+      ],
+      rotate: [0, s1.rotate, s2.rotate, s3.rotate, fan.rotate],
+      scaleY: -1,
+      scaleX: 1,
+      opacity: [0, 1, 1, 1, inView ? 1 : 0],
+      transition: {
+        delay: Math.abs(index - (CARD_COUNT - 1) / 2) * 0.012,
+        duration: 1.55,
+        times: [0, 0.22, 0.44, 0.64, 1],
+        ease: [0.22, 1, 0.36, 1],
+      },
     }
   } else if (phase === PHASE.FAN) {
     if (isSel) {
       anim = {
-        x: fanX - CARD_W / 2, y: (c.cy - CARD_H / 2) - 300,
-        rotate: 0, scaleY: -1, scaleX: 1, opacity: 0,
-        transition: { type: 'spring', stiffness: 220, damping: 28, mass: 0.8 },
+        x: slotCenterX - CARD_W / 2,
+        y: slotCenterY - CARD_H / 2,
+        rotate: 0,
+        scaleY: -1,
+        scaleX: 1,
+        opacity: 0,
+        transition: {
+          x: { type: 'spring', stiffness: 260, damping: 28, mass: 0.78, delay: liftDelay },
+          y: { type: 'spring', stiffness: 260, damping: 28, mass: 0.78, delay: liftDelay },
+          rotate: { type: 'spring', stiffness: 260, damping: 30, delay: liftDelay },
+          opacity: { delay: 0.38 + liftDelay, duration: 0.12 },
+        },
       }
     } else {
       anim = {
-        x: fanX - CARD_W / 2,
-        y: isHov ? (c.cy - CARD_H / 2) - 22 : (c.cy - CARD_H / 2),
-        rotate: c.angle, scaleY: -1, scaleX: 1,
+        x: fan.x,
+        y: isHov ? fan.y - 22 : fan.y,
+        rotate: fan.rotate, scaleY: -1, scaleX: 1,
         opacity: inView ? 1 : 0,
         transition: isHov
           ? { type: 'spring', stiffness: 420, damping: 26 }
@@ -102,14 +169,23 @@ function FanCard({ index, phase, hoveredCard, selectedCard, selectedCards, panOf
   } else if (phase === PHASE.SELECT) {
     if (selectedCard === index) {
       anim = {
-        x: fanX - CARD_W / 2, y: (c.cy - CARD_H / 2) - 300,
-        rotate: 0, scaleY: -1, scaleX: 1, opacity: 0,
-        transition: { type: 'spring', stiffness: 220, damping: 28, mass: 0.8 },
+        x: slotCenterX - CARD_W / 2,
+        y: slotCenterY - CARD_H / 2,
+        rotate: 0,
+        scaleY: -1,
+        scaleX: 1,
+        opacity: 0,
+        transition: {
+          x: { type: 'spring', stiffness: 260, damping: 28, mass: 0.78 },
+          y: { type: 'spring', stiffness: 260, damping: 28, mass: 0.78 },
+          rotate: { type: 'spring', stiffness: 260, damping: 30 },
+          opacity: { delay: 0.42, duration: 0.16 },
+        },
       }
     } else {
       anim = {
-        x: fanX - CARD_W / 2, y: (c.cy - CARD_H / 2) + 80,
-        rotate: c.angle, scaleY: -1, scaleX: 1, opacity: 0,
+        x: fan.x, y: fan.y + 96,
+        rotate: fan.rotate, scaleY: -1, scaleX: 1, opacity: 0,
         transition: { delay: index * 0.01, duration: 0.28, ease: 'easeIn' },
       }
     }
@@ -120,16 +196,17 @@ function FanCard({ index, phase, hoveredCard, selectedCard, selectedCards, panOf
   const canTap = phase === PHASE.FAN && !isSel
   return (
     <motion.div
-      initial={{ x: ARC_CX - CARD_W / 2, y: CY_MIN - CARD_H / 2, rotate: 0, scaleY: -1, scaleX: 1, opacity: 0 }}
+      initial={{ x: ARC_CX - CARD_W / 2, y: SHUFFLE_CENTER_Y - CARD_H / 2, rotate: 0, scaleY: -1, scaleX: 1, opacity: 0 }}
       animate={anim}
       onHoverStart={() => canTap && onHover(index)}
       onHoverEnd={() => phase === PHASE.FAN && onHoverEnd()}
       onClick={() => canTap && onTap(index)}
       style={{
         position: 'absolute', width: CARD_W, height: CARD_H,
+        willChange: 'transform, opacity',
         cursor: canTap ? 'pointer' : 'default',
         filter: isHov ? 'brightness(1.3) drop-shadow(0 0 12px rgba(200,180,255,0.9))' : 'none',
-        zIndex: isHov ? 20 : 1,
+        zIndex: isHov ? 30 : isSel ? 24 : 1,
       }}
     >
       <CardBack />
@@ -255,6 +332,7 @@ export default function CardSelectionOverlay({
   }
 
   const isReveal = phase === PHASE.REVEAL
+  const fanTop = mode === 'yes_no' ? FAN_TOP_YES_NO : FAN_TOP_THREE_CARD
 
   return (
     <>
@@ -380,13 +458,14 @@ export default function CardSelectionOverlay({
                 {/* Fan */}
                 <div
                   onMouseDown={onMouseDown} onTouchStart={onTouchStart} onTouchMove={onTouchMove}
-                  style={{ position: 'absolute', top: mode === 'yes_no' ? 382 : 352, left: 0, width: '100%', height: 380, cursor: phase === PHASE.FAN ? 'grab' : 'default' }}
+                  style={{ position: 'absolute', top: fanTop, left: 0, width: '100%', height: 380, cursor: phase === PHASE.FAN ? 'grab' : 'default' }}
                 >
                   {DECK.map((_, i) => (
                     <FanCard
                       key={i} index={i} phase={phase}
                       hoveredCard={hoveredCard} selectedCard={selectedCard} selectedCards={selectedCards}
                       panOffset={panOffset}
+                      fanTop={fanTop}
                       onHover={setHoveredCard} onHoverEnd={() => setHoveredCard(null)} onTap={handleTap}
                     />
                   ))}
