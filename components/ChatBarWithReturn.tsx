@@ -8,7 +8,7 @@ const A = {
   tarotIcon:     '/tarot-icon.svg',
   horoIcon:      '/horoscope-icon.svg',
   sendIcon:      'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
-  opheliaAvatar: 'https://www.figma.com/api/mcp/asset/3d99c934-3e4e-41eb-ab74-936c58323d64',
+  opheliaAvatar: '/ophelia-avatar.svg',
 }
 
 interface Props {

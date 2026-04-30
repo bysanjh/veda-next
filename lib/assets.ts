@@ -26,8 +26,8 @@ export const ASSETS = {
 
   // Ophelia
   opheliaPhoto: 'https://www.figma.com/api/mcp/asset/f1d57af2-badd-40af-9b8c-79ea96d1c45c',
-  opheliaAvatarSmall: 'https://www.figma.com/api/mcp/asset/3d99c934-3e4e-41eb-ab74-936c58323d64',
-  opheliaAvatarLarge: 'https://www.figma.com/api/mcp/asset/a55f28a0-c190-48db-af9b-32eca58239b2',
+  opheliaAvatarSmall: '/ophelia-avatar.svg',
+  opheliaAvatarLarge: '/ophelia-avatar.svg',
   toggleGroup: 'https://www.figma.com/api/mcp/asset/88044ce2-a555-41e0-8c50-d973d1104d9d',
   opheliaOverlayEllipse50: 'https://www.figma.com/api/mcp/asset/f3314ca4-6e2a-4921-8693-a4ea22dc7460',
   opheliaOverlayEllipse51: 'https://www.figma.com/api/mcp/asset/dc03f4d2-5e83-4054-9d67-212200330834',
