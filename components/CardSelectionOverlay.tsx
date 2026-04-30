@@ -17,15 +17,16 @@ const RA = {
   ynEllipse51:    'https://www.figma.com/api/mcp/asset/b9dfc241-bc02-42d3-86ac-a38b270cbf5d',
 }
 
-// ── Arc geometry ───────────────────────────────────────────────────────────────
+// ── Arc geometry (optimized for iPhone 16: 393x852) ─────────────────────────────
 const CARD_COUNT = 22
-const CARD_W     = 83.7
-const CARD_H     = 124
-const ARC_CX     = 198
-const X_STEP     = 47
+const CARD_W     = 70      // Slightly smaller cards for mobile
+const CARD_H     = 104     // Proportional height
+const SHEET_W    = 393     // iPhone 16 width
+const ARC_CX     = SHEET_W / 2  // Center of sheet
+const X_STEP     = 40
 const ANG_STEP   = 5.5
 const ANG_CTR    = 0.83
-const CY_MIN     = 111
+const CY_MIN     = 180     // Moved down for better mobile visibility
 const Y_CURVE    = 0.072
 
 // Arc pivot point (below visible area for rotational browsing)
@@ -99,16 +100,16 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
   const isHov = hoveredCard === index && phase === PHASE.FAN
   const isSel = selectedCard === index || selectedCards.includes(index)
   
-  // Slot position for selected card
+  // Slot position for selected card (centered in slot)
   const slotX = ARC_CX - CARD_W / 2
-  const slotY = mode === 'yes_no' ? 85 + (297 - CARD_H) / 2 : 68 + (164.313 - CARD_H) / 2
+  const slotY = mode === 'yes_no' ? 70 + (245 - CARD_H) / 2 : 68 + (140 - CARD_H) / 2
 
   // Animation states based on phase and shuffle step
   const getAnimation = () => {
     // SHUFFLE phase animations - realistic riffle shuffle
     if (phase === PHASE.SHUFFLE) {
       const stackX = ARC_CX - CARD_W / 2
-      const stackY = 200 // Center stack position
+      const stackY = 250 // Center stack position for mobile
       const isLeftHalf = index < CARD_COUNT / 2
       const halfIndex = isLeftHalf ? index : index - Math.floor(CARD_COUNT / 2)
       
@@ -348,14 +349,14 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
   )
 }
 
-// ── Three-card constants ────────────────────────────────────────────────────────
+// ── Three-card constants (iPhone 16 optimized) ─────────────────────────────────
 const POSITIONS = ['Past', 'Present', 'Future']
-const SLOT_W    = 109.542
-const SLOT_H    = 164.313
-const SLOT_GAP  = 10.687
-const THUMB_W   = 95.85
-const THUMB_H   = 142
-const PAGER_W   = 354
+const SLOT_W    = 95
+const SLOT_H    = 140
+const SLOT_GAP  = 8
+const THUMB_W   = 80
+const THUMB_H   = 118
+const PAGER_W   = 320
 
 const CARD_READINGS = [
   { label: 'Moon (Past)',       body: 'Confusion and doubt clouded your judgment.' },
@@ -579,10 +580,11 @@ export default function CardSelectionOverlay({
         pointerEvents: 'none', zIndex: 29,
       }} />
 
-      {/* Sheet — fixed 402px wide, always centered (matches Figma mobile frame) */}
+      {/* Sheet — iPhone 16 optimized (393px), always centered */}
       <div style={{
-        position: 'absolute', bottom: 0, left: '50%', width: 402,
-        height: 'min(730px, calc(100dvh - 121px))',
+        position: 'absolute', bottom: 0, left: '50%', width: SHEET_W,
+        maxWidth: '100vw',
+        height: 'min(730px, calc(100dvh - 80px))',
         transform: `translateX(-50%) translateY(${sheetY}%)`,
         transition: 'transform 0.65s cubic-bezier(0.32,0.72,0,1)', zIndex: 30,
         overflow: 'hidden', borderRadius: '24px 24px 0 0', border: 'none',
@@ -597,7 +599,7 @@ export default function CardSelectionOverlay({
           onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
         >
           {/* Purple glow */}
-          <div style={{ position: 'absolute', top: -187, left: -76, width: 509, height: 347, pointerEvents: 'none' }}>
+          <div style={{ position: 'absolute', top: -120, left: -58, width: '130%', height: 300, pointerEvents: 'none' }}>
             <img src={ASSETS.cardPullEllipse50} alt="" style={{ position: 'absolute', inset: '-12.1% -8.3%', width: '116.6%', height: '124.2%' }} />
           </div>
 
@@ -638,9 +640,9 @@ export default function CardSelectionOverlay({
                 {/* Slots */}
                 {mode === 'yes_no' ? (
                   <div style={{
-                    position: 'absolute', top: 85, left: '50%',
+                    position: 'absolute', top: 70, left: '50%',
                     transform: 'translateX(-50%)',
-                    width: 198, height: 297, background: 'rgba(217,217,217,0.06)',
+                    width: 165, height: 245, background: 'rgba(217,217,217,0.06)',
                     border: selectedCard !== null ? 'none' : '1.13px solid #282828',
                     borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'border-color 0.3s', zIndex: 5, overflow: 'hidden',
@@ -716,10 +718,10 @@ export default function CardSelectionOverlay({
                   onTouchEnd={onTouchEnd}
                   style={{ 
                     position: 'absolute', 
-                    top: mode === 'yes_no' ? 382 : 352, 
+                    top: mode === 'yes_no' ? 320 : 300, 
                     left: 0, 
                     width: '100%', 
-                    height: 380, 
+                    height: 350, 
                     cursor: phase === PHASE.FAN ? 'grab' : 'default',
                     touchAction: 'none',
                   }}
@@ -751,7 +753,7 @@ export default function CardSelectionOverlay({
                   {phase === PHASE.FAN && (
                     <motion.div
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
-                      style={{ position: 'absolute', top: mode === 'yes_no' ? 629 : 647, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none', whiteSpace: 'nowrap' }}
+                      style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none', whiteSpace: 'nowrap' }}
                     >
                       <img src={ASSETS.swipeIcon} alt="" style={{ width: 20, height: 20, opacity: 0.6 }} />
                       {mode === 'three_card' && (
@@ -768,7 +770,7 @@ export default function CardSelectionOverlay({
                   {phase === PHASE.SHUFFLE && (
                     <motion.p
                       initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.4 } }} exit={{ opacity: 0 }}
-                      style={{ position: 'absolute', bottom: mode === 'yes_no' ? 100 : 80, width: '100%', textAlign: 'center', fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.45)', pointerEvents: 'none', margin: 0 }}
+                      style={{ position: 'absolute', bottom: 60, width: '100%', textAlign: 'center', fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 14, color: 'rgba(255,255,255,0.45)', pointerEvents: 'none', margin: 0 }}
                     >
                       Shuffling the deck…
                     </motion.p>
@@ -790,23 +792,23 @@ export default function CardSelectionOverlay({
                   {/* Circular glow — decorative, absolute */}
                   <div style={{
                     position: 'absolute', left: '50%', transform: 'translateX(-50%)',
-                    top: 33, width: 420, height: 420,
+                    top: 25, width: 350, height: 350,
                     pointerEvents: 'none', zIndex: 0,
                     background: 'radial-gradient(circle, rgba(114,129,188,0.22) 0%, rgba(114,129,188,0.10) 40%, rgba(114,129,188,0.03) 66%, transparent 82%)',
                   }} />
 
                   {/* Spacer below the "Your card" header */}
-                  <div style={{ flexShrink: 0, height: 80 }} />
+                  <div style={{ flexShrink: 0, height: 60 }} />
 
                   {/* Card — compact size to leave generous room for reading text */}
-                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 28, zIndex: 2 }}>
+                  <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 20, zIndex: 2 }}>
                     <motion.div 
                       initial={{ scale: 0.95, y: 20 }}
                       animate={{ scale: 1, y: 0 }}
                       transition={{ type: 'spring', stiffness: 200, damping: 20 }}
                       style={{
-                        width: 198,
-                        height: 297,
+                        width: 165,
+                        height: 245,
                         perspective: 900,
                       }}
                     >
@@ -878,26 +880,26 @@ export default function CardSelectionOverlay({
                 >
                   {/* Glow — wide ellipse behind cards */}
                   <div style={{
-                    position: 'absolute', left: -12, top: 56, width: 426, height: 263,
+                    position: 'absolute', left: 0, top: 50, width: '100%', height: 220,
                     pointerEvents: 'none', zIndex: 0,
                     background: 'radial-gradient(ellipse 60% 65% at 50% 42%, rgba(110,95,215,0.55) 0%, rgba(80,65,175,0.25) 44%, rgba(60,50,140,0.07) 70%, transparent 85%)',
                   }} />
 
                   {/* Swipe carousel — all 3 cards anchored to center, x-offset drives position */}
-                  <div style={{ position: 'absolute', top: 92, left: 0, right: 0, height: 186 }}>
+                  <div style={{ position: 'absolute', top: 80, left: 0, right: 0, height: 160 }}>
                     {CARD_IMAGES.map((src, i) => {
                       const slot = (i - activeReading + 3) % 3
-                      // slot 0=center, slot 1=right (+117px), slot 2=left (-117px)
-                      const xOff = slot === 0 ? 0 : slot === 1 ? 117 : -117
+                      // slot 0=center, slot 1=right (+100px), slot 2=left (-100px)
+                      const xOff = slot === 0 ? 0 : slot === 1 ? 100 : -100
                       const isCenter = slot === 0
                       return (
                         <motion.div
                           key={i}
                           style={{
-                            position: 'absolute', left: '50%', marginLeft: -61.5, top: 0,
-                            width: 123, height: 184, borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
+                            position: 'absolute', left: '50%', marginLeft: -52, top: 0,
+                            width: 104, height: 155, borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
                             zIndex: isCenter ? 2 : 1,
-                            boxShadow: isCenter ? '19px 0 36px rgba(0,0,0,0.4), -19px 0 36px rgba(0,0,0,0.4)' : 'none',
+                            boxShadow: isCenter ? '15px 0 30px rgba(0,0,0,0.4), -15px 0 30px rgba(0,0,0,0.4)' : 'none',
                           }}
                           animate={{ x: xOff }}
                           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -915,15 +917,15 @@ export default function CardSelectionOverlay({
                   </div>
 
                   {/* Swipe hint */}
-                  <div style={{ position: 'absolute', top: 284, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 3, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
-                    <img src={ASSETS.swipeIcon} alt="" style={{ width: 20, height: 20 }} />
-                    <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 12, color: '#7d7e83', lineHeight: 1.2, margin: 0 }}>
+                  <div style={{ position: 'absolute', top: 248, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 3, pointerEvents: 'none', whiteSpace: 'nowrap' }}>
+                    <img src={ASSETS.swipeIcon} alt="" style={{ width: 18, height: 18 }} />
+                    <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 11, color: '#7d7e83', lineHeight: 1.2, margin: 0 }}>
                       Swipe to switch cards
                     </p>
                   </div>
 
                   {/* Scrollable content */}
-                  <div className="no-scrollbar" style={{ position: 'absolute', top: 312, left: 0, right: 0, bottom: 88, overflowY: 'auto', padding: '0 24px' }}>
+                  <div className="no-scrollbar" style={{ position: 'absolute', top: 275, left: 0, right: 0, bottom: 80, overflowY: 'auto', padding: '0 20px' }}>
                     {/* Per-card reading — fades when active card changes */}
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -961,13 +963,13 @@ export default function CardSelectionOverlay({
                   </div>
 
                   {/* Button pinned at bottom */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 24px 24px', background: 'linear-gradient(to top, #080808 65%, transparent)' }}>
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px 20px 20px', background: 'linear-gradient(to top, #080808 65%, transparent)' }}>
                     <button
                       onClick={onAnotherReading}
                       style={{
-                        width: '100%', background: '#372e6a', borderRadius: 8, padding: '16px 0',
+                        width: '100%', background: '#372e6a', borderRadius: 8, padding: '14px 0',
                         border: 'none', cursor: 'pointer',
-                        fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 18, color: '#fff', letterSpacing: -0.72,
+                        fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 16, color: '#fff', letterSpacing: -0.64,
                       }}
                     >
                       Get another reading
