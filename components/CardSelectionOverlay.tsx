@@ -42,13 +42,11 @@ const DECK = buildDeck()
 const PHASE = { SHUFFLE: 'shuffle', FAN: 'fan', SELECT: 'select', REVEAL: 'reveal' } as const
 type Phase = typeof PHASE[keyof typeof PHASE]
 
-// ── Card back (purple + star) ──────────────────────────────────────────────────
+// ── Card back ─────────────────────────────────────────────────────────────────
 function CardBack() {
   return (
     <div style={{ width: '100%', height: '100%', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
-      <img src={ASSETS.glitterBg2} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-      <div style={{ position: 'absolute', inset: '3.3% 3.5%', background: '#372e6a', borderRadius: 2 }} />
-      <img src={ASSETS.star2} alt="" style={{ position: 'absolute', width: 42, height: 42, top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
+      <img src="/card-back.svg" alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
     </div>
   )
 }

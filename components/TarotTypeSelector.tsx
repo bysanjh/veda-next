@@ -21,7 +21,7 @@ function CardBack({ rotate, right, zIndex = 1 }: { rotate: number; right: number
       boxShadow: '2px 4px 8px rgba(0,0,0,0.35)',
     }}>
       <img
-        src={ASSETS.backOfCard18}
+        src="/card-back.svg"
         alt=""
         style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
       />

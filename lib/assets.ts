@@ -21,7 +21,7 @@ export const ASSETS = {
   ellipse48: 'https://www.figma.com/api/mcp/asset/44639892-761e-49d1-b2b0-3641142f3633',
   ellipse49: 'https://www.figma.com/api/mcp/asset/43668661-7706-46dc-9b6b-7b914849aa24',
   ellipse54: 'https://www.figma.com/api/mcp/asset/2b75edb2-d37b-4749-87e8-bc3de6a608e3',
-  tarotCardBack: 'https://www.figma.com/api/mcp/asset/ec7a42e8-3615-454f-9230-5bf1709c8cb7',
+  tarotCardBack: '/card-back.svg',
   horoscopeOrb: 'https://www.figma.com/api/mcp/asset/b35d908f-3f6d-42dc-b774-57cca2d65bb1',
 
   // Ophelia
@@ -33,7 +33,7 @@ export const ASSETS = {
   opheliaOverlayEllipse51: 'https://www.figma.com/api/mcp/asset/dc03f4d2-5e83-4054-9d67-212200330834',
 
   // Reading choice cards
-  backOfCard18: 'https://www.figma.com/api/mcp/asset/7415df61-b7d7-4f52-9cf6-9d86a9c9952d',
+  backOfCard18: '/card-back.svg',
   ellipse40: 'https://www.figma.com/api/mcp/asset/3ccc352c-037b-452d-8716-8853f155591a',
   ellipse42: 'https://www.figma.com/api/mcp/asset/54488e5b-ec8f-4a0b-a5d0-0493b971a780',
   ellipse43: 'https://www.figma.com/api/mcp/asset/4819d501-8ea9-41a2-b106-b7d2de813a19',
