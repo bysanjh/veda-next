@@ -269,7 +269,8 @@ export default function CardSelectionOverlay({
         height: 'min(730px, calc(100dvh - 121px))',
         transform: `translateX(-50%) translateY(${sheetY}%)`,
         transition: 'transform 0.65s cubic-bezier(0.32,0.72,0,1)', zIndex: 30,
-        overflow: 'hidden',
+        overflow: 'hidden', borderRadius: '24px 24px 0 0', border: 'none',
+        background: '#080808',
       }}>
         <div
           style={{
