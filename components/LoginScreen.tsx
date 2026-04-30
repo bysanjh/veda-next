@@ -6,11 +6,9 @@ const A = {
   ellipse16:    'https://www.figma.com/api/mcp/asset/2c5b8e28-1dfa-4384-b181-61050898c6b3',
   ellipse17:    'https://www.figma.com/api/mcp/asset/487f9ab9-d773-42c0-a6ac-5652a4596272',
   ellipse18:    'https://www.figma.com/api/mcp/asset/d9b133a8-52d1-4567-a73b-064c985ca849',
-  star1:        'https://www.figma.com/api/mcp/asset/23c67d42-d451-4d9d-8389-43c96255a9c9',
-  star2:        'https://www.figma.com/api/mcp/asset/510f99b5-e660-496d-a736-4f5cd4038461',
-  star3:        'https://www.figma.com/api/mcp/asset/4fed7644-0c8b-44c2-bec0-377528a8392d',
-  googleIcon:   'https://www.figma.com/api/mcp/asset/f96872cb-affd-4e9b-aa75-94ed1470291d',
-  facebookIcon: 'https://www.figma.com/api/mcp/asset/987e67e8-3a49-44f1-9648-6184eaaaa24f',
+  star:         '/star.svg',
+  googleIcon:   '/google-icon.png',
+  facebookIcon: '/facebook-icon.png',
 }
 
 interface LoginScreenProps {
@@ -181,14 +179,14 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
           </div>
 
           {/* Star bullets */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             {([
-              [A.star1, '20 free conversations a day'],
-              [A.star2, 'Picks up where you left off — always'],
-              [A.star3, 'Predictive guidance shaped around your journey'],
-            ] as [string, string][]).map(([src, text]) => (
-              <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                <img src={src} alt="" style={{ width: 20, height: 20, flexShrink: 0, display: 'block' }} />
+              '20 free conversations a day',
+              'Picks up where you left off — always',
+              'Predictive guidance shaped around your journey',
+            ] as string[]).map((text) => (
+              <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
+                <img src={A.star} alt="" style={{ width: 21, height: 21, flexShrink: 0, display: 'block', marginTop: 1 }} />
                 <p style={{
                   fontFamily: 'var(--font-roboto)',
                   fontSize: 16, fontWeight: 400,
@@ -206,18 +204,20 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             <button
               onClick={onContinue}
               style={{
-                width: '100%', height: 52,
-                backgroundColor: 'white',
-                borderRadius: 50, border: 'none',
+                width: '100%', height: 53,
+                backgroundColor: '#47429c',
+                borderRadius: 10, border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 11, cursor: 'pointer', overflow: 'hidden',
+                gap: 14, cursor: 'pointer', overflow: 'hidden',
+                position: 'relative',
               }}
             >
-              <img src={A.googleIcon} alt="" style={{ width: 34, height: 34, display: 'block', flexShrink: 0 }} />
+              <img src={A.googleIcon} alt="" style={{ width: 27, height: 27, display: 'block', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-roboto)',
-                fontSize: 18, fontWeight: 500,
-                color: '#101010', whiteSpace: 'nowrap',
+                fontSize: 18, fontWeight: 400,
+                color: 'white', whiteSpace: 'nowrap',
+                letterSpacing: '-0.72px',
               }}>
                 Continue with Google
               </span>
@@ -226,18 +226,20 @@ export default function LoginScreen({ onContinue }: LoginScreenProps) {
             <button
               onClick={onContinue}
               style={{
-                width: '100%', height: 52,
-                backgroundColor: 'white',
-                borderRadius: 26, border: 'none',
+                width: '100%', height: 53,
+                backgroundColor: '#47429c',
+                borderRadius: 10, border: 'none',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: 11, cursor: 'pointer', overflow: 'hidden',
+                gap: 14, cursor: 'pointer', overflow: 'hidden',
+                position: 'relative',
               }}
             >
-              <img src={A.facebookIcon} alt="" style={{ width: 34, height: 34, display: 'block', flexShrink: 0 }} />
+              <img src={A.facebookIcon} alt="" style={{ width: 28, height: 28, display: 'block', flexShrink: 0 }} />
               <span style={{
                 fontFamily: 'var(--font-roboto)',
-                fontSize: 18, fontWeight: 500,
-                color: '#101010', whiteSpace: 'nowrap',
+                fontSize: 18, fontWeight: 400,
+                color: 'white', whiteSpace: 'nowrap',
+                letterSpacing: '-0.72px',
               }}>
                 Continue with Facebook
               </span>
