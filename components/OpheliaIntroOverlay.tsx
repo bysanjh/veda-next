@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 const A = {
   opheliaPhoto: 'https://www.figma.com/api/mcp/asset/23da2d00-1750-4148-903a-179c402b9110',
-  closeX:       'https://www.figma.com/api/mcp/asset/79704f60-ff70-4fb8-8e10-71ad7e6d5bb5',
+  closeX:       '/close-x.svg',
   ellipse50:    'https://www.figma.com/api/mcp/asset/b3a416a8-e75b-452f-8a54-7ad906793040',
   ellipse51:    'https://www.figma.com/api/mcp/asset/d2e80d00-c27a-4cf4-890d-8b006ba8fdde',
 }
@@ -31,7 +31,6 @@ export default function OpheliaIntroOverlay({ onClose, onYesNo, onThreeCard }: O
         height: 'min(700px, calc(100dvh - 121px))',
         backgroundColor: '#080808',
         borderRadius: '24px 24px 0 0',
-        boxShadow: '1px 0px 0px 0px rgba(255,255,255,0.17),-1px -1px 0px 0px rgba(255,255,255,0.17)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',

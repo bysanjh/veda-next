@@ -4,7 +4,7 @@
 const A = {
   moon:      'https://www.figma.com/api/mcp/asset/5a6b5798-cb6a-4ba6-9029-f4bea04ec4ac',
   ellipse50: 'https://www.figma.com/api/mcp/asset/fed77f38-aa0e-4a33-8052-fce7b0daf871',
-  closeX:    'https://www.figma.com/api/mcp/asset/73b34238-9f12-4a8e-9450-270499568835',
+  closeX:    '/close-x.svg',
 }
 
 interface CardRevealOverlayProps {
@@ -24,7 +24,6 @@ export default function CardRevealOverlay({
         height: 'min(730px, calc(100dvh - 121px))',
         backgroundColor: '#080808',
         borderRadius: '24px 24px 0 0',
-        boxShadow: '1px 0px 0px 0px rgba(255,255,255,0.17),-1px -1px 0px 0px rgba(255,255,255,0.17)',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',

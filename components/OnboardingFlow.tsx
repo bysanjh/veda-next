@@ -16,7 +16,7 @@ interface OnboardingFlowProps {
 
 // Figma asset URLs for onboarding steps
 const OB = {
-  closeX:   'https://www.figma.com/api/mcp/asset/5c27609b-1d3a-4b43-af13-d4c85447f994',
+  closeX:   '/close-x.svg',
   userIcon: 'https://www.figma.com/api/mcp/asset/b3299cd9-8991-494e-a9fa-e6a13c57f0c3',
   mapPin:   'https://www.figma.com/api/mcp/asset/a177341a-0a81-4609-ace7-67d196e00e89',
   editIcon: 'https://www.figma.com/api/mcp/asset/23dba3a4-69ae-4417-a3de-87c43ebb9314',

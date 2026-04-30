@@ -6,7 +6,7 @@ const A = {
   jupiter:   'https://www.figma.com/api/mcp/asset/ccc1f4d9-fc6d-4f39-8da9-6275b118b8b6',
   moon:      'https://www.figma.com/api/mcp/asset/b0ae4205-ba72-4694-af13-4be2fe0f059a',
   mars:      'https://www.figma.com/api/mcp/asset/1ea44929-4147-407e-9bfe-28c28f657431',
-  closeX:    'https://www.figma.com/api/mcp/asset/ee72c270-6df5-4667-9a7a-2855d9b56c9d',
+  closeX:    '/close-x.svg',
   swipeIcon: 'https://www.figma.com/api/mcp/asset/85919de0-fbe0-437a-8f0d-1fe5564e258f',
   ellipse50: 'https://www.figma.com/api/mcp/asset/058e5a80-fb43-4199-9179-6f559f177eb3',
   ellipse51: 'https://www.figma.com/api/mcp/asset/4b60622f-9300-4f0c-846c-2b7ea4d55800',
@@ -48,7 +48,6 @@ export default function ThreeCardResultOverlay({
         height: 730,
         background: '#080808',
         borderRadius: '24px 24px 0 0',
-        boxShadow: '1px 0 0 rgba(255,255,255,0.17), -1px -1px 0 rgba(255,255,255,0.17)',
         overflow: 'hidden',
       }}
     >

@@ -43,7 +43,7 @@ export const ASSETS = {
 
   // Card selection overlay
   cardPullEllipse50: 'https://www.figma.com/api/mcp/asset/b89d536e-8626-4579-84aa-f0574743096d',
-  closeX: 'https://www.figma.com/api/mcp/asset/02bf8d3e-7a48-4c9f-9e96-33a082d56399',
+  closeX: '/close-x.svg',
   swipeIcon: 'https://www.figma.com/api/mcp/asset/220b024b-7ac7-4c41-abf9-bf6183efb4e1',
   glitterBg2: 'https://www.figma.com/api/mcp/asset/d506c4d1-7e77-4357-b5ed-642c5790a57c',
 

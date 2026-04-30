@@ -274,7 +274,6 @@ export default function CardSelectionOverlay({
           style={{
             position: 'relative', width: '100%', height: '100%',
             background: '#080808', borderRadius: '24px 24px 0 0', overflow: 'hidden',
-            boxShadow: '1px 0 0 rgba(255,255,255,0.17), -1px -1px 0 rgba(255,255,255,0.17)',
             userSelect: 'none',
           }}
           onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
@@ -483,9 +482,11 @@ export default function CardSelectionOverlay({
                     {/* Reading body — scrolls only if unusually long */}
                     <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginBottom: 10 }}>
                       {revealText ? (
-                        <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 15.4, color: '#fff', letterSpacing: -0.46, lineHeight: '1.4', margin: 0, whiteSpace: 'pre-wrap' }}>
-                          {revealText}
-                        </p>
+                        revealText.split('\n\n').map((para, i) => (
+                          <p key={i} style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 15.4, color: '#fff', letterSpacing: -0.46, lineHeight: '1.4', margin: i === 0 ? 0 : '10px 0 0' }}>
+                            {para}
+                          </p>
+                        ))
                       ) : (
                         <span style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                           <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
