@@ -94,13 +94,18 @@ export default function CardRevealOverlay({
           marginBottom: 10,
         }}>
           {reading ? (
-            <p style={{
-              fontFamily: 'var(--font-roboto)', fontSize: 14, color: 'white',
-              letterSpacing: '-0.42px', lineHeight: '1.4',
-              whiteSpace: 'pre-wrap', margin: 0,
-            }}>
-              {reading}
-            </p>
+            reading
+              .split(/(?<=[.!?])\s+(?=[A-Z])/g)
+              .filter(s => s.trim())
+              .map((para, i) => (
+                <p key={i} style={{
+                  fontFamily: 'var(--font-roboto)', fontSize: 14, color: 'white',
+                  letterSpacing: '-0.42px', lineHeight: '1.4',
+                  margin: i === 0 ? 0 : '12px 0 0',
+                }}>
+                  {para.trim()}
+                </p>
+              ))
           ) : (
             isStreaming && (
               <span className="flex gap-[6px]" style={{ marginTop: 4 }}>

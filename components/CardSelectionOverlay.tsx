@@ -320,11 +320,14 @@ export default function CardSelectionOverlay({
                 {/* Slots */}
                 {mode === 'yes_no' ? (
                   <div style={{
-                    position: 'absolute', top: 85, left: '50%', transform: 'translateX(-50%)',
+                    position: 'absolute', top: 85, left: '50%',
+                    transform: phase === PHASE.SELECT
+                      ? 'translateX(-50%) translateY(calc(min(730px, 100dvh - 121px) / 2 - 233.5px))'
+                      : 'translateX(-50%)',
                     width: 198, height: 297, background: 'rgba(217,217,217,0.06)',
                     border: `1.13px solid ${selectedCard !== null ? '#747474' : '#282828'}`,
                     borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    transition: 'border-color 0.3s', zIndex: 5, overflow: 'hidden',
+                    transition: 'transform 0.5s ease, border-color 0.3s', zIndex: 5, overflow: 'hidden',
                   }}>
                     {selectedCard !== null ? (
                       <div style={{ width: '100%', height: '100%' }}><CardBack /></div>
@@ -482,11 +485,14 @@ export default function CardSelectionOverlay({
                     {/* Reading body — scrolls only if unusually long */}
                     <div className="no-scrollbar" style={{ flex: 1, minHeight: 0, overflowY: 'auto', marginBottom: 10 }}>
                       {revealText ? (
-                        revealText.split('\n\n').map((para, i) => (
-                          <p key={i} style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 15.4, color: '#fff', letterSpacing: -0.46, lineHeight: '1.4', margin: i === 0 ? 0 : '10px 0 0' }}>
-                            {para}
-                          </p>
-                        ))
+                        revealText
+                          .split(/(?<=[.!?])\s+(?=[A-Z])/g)
+                          .filter(s => s.trim())
+                          .map((para, i) => (
+                            <p key={i} style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 15.4, color: '#fff', letterSpacing: -0.46, lineHeight: '1.4', margin: i === 0 ? 0 : '12px 0 0' }}>
+                              {para.trim()}
+                            </p>
+                          ))
                       ) : (
                         <span style={{ display: 'flex', gap: 6, marginTop: 4 }}>
                           <span className="typing-dot" /><span className="typing-dot" /><span className="typing-dot" />
