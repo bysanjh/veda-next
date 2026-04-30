@@ -117,14 +117,14 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
       if (shuffleStep === SHUFFLE_STEP.STACK) {
         return {
           x: stackX,
-          y: stackY - index * 0.6,
-          rotate: (Math.random() - 0.5) * 1.5,
+          y: stackY - index * 0.5,
+          rotate: 0,
           scaleY: -1,
           scaleX: 1,
           opacity: 1,
           transition: { 
-            duration: 0.35,
-            delay: index * 0.012,
+            duration: 0.3,
+            delay: index * 0.01,
             ease: [0.4, 0, 0.2, 1]
           },
         }
@@ -213,21 +213,26 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
         }
       }
       
-      // SPREAD - fan out into arc
+      // SPREAD - fan out into arc from center outward
       if (shuffleStep === SHUFFLE_STEP.SPREAD) {
+        // Spread from center - cards closest to center animate first
+        const centerIndex = Math.floor(CARD_COUNT / 2)
+        const distFromCenter = Math.abs(index - centerIndex)
+        const spreadDelay = distFromCenter * 0.04
+        
         return {
           x: arcX - CARD_W / 2,
           y: arcY - CARD_H / 2,
           rotate: rotatedAngle,
           scaleY: -1,
           scaleX: 1,
-          opacity: inView ? 1 : 0,
+          opacity: 1,
           transition: {
-            duration: 0.5,
-            delay: index * 0.035,
+            duration: 0.45,
+            delay: spreadDelay,
             type: 'spring',
-            stiffness: 180,
-            damping: 22,
+            stiffness: 200,
+            damping: 24,
           },
         }
       }
@@ -290,17 +295,18 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
         }
       }
       
-      // Other cards fall away
+      // Other cards fall away - systematic from selected card outward
+      const distFromSelected = Math.abs(index - (selectedCard || 0))
       return {
         x: arcX - CARD_W / 2,
-        y: (arcY - CARD_H / 2) + 120,
-        rotate: rotatedAngle + (Math.random() - 0.5) * 20,
+        y: (arcY - CARD_H / 2) + 100,
+        rotate: rotatedAngle,
         scaleY: -1,
         scaleX: 1,
         opacity: 0,
         transition: {
-          duration: 0.4,
-          delay: Math.abs(index - (selectedCard || 0)) * 0.02,
+          duration: 0.35,
+          delay: distFromSelected * 0.025,
           ease: [0.4, 0, 1, 1],
         },
       }
@@ -340,7 +346,8 @@ function FanCard({ index, phase, shuffleStep, hoveredCard, selectedCard, selecte
           : isSel 
             ? 'drop-shadow(0 8px 24px rgba(0,0,0,0.5))'
             : 'none',
-        zIndex: isHov ? 25 : isSel ? 20 : 10 - Math.abs(index - mid),
+        // Z-index: rightmost cards on top (higher index = higher z)
+        zIndex: isHov ? 50 : isSel ? 40 : index,
         transformOrigin: 'center bottom',
       }}
     >
