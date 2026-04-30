@@ -205,7 +205,7 @@ export default function CardSelectionOverlay({
           setCardFlipped(true)
           setTimeout(() => setShowReading(true), 700)
         }, 300)
-      }, 5000)
+      }, 3000)
     } else {
       if (selectedCards.includes(i)) return
       const next = [...selectedCards, i]
