@@ -203,9 +203,9 @@ export default function CardSelectionOverlay({
         setPhase(PHASE.REVEAL)
         setTimeout(() => {
           setCardFlipped(true)
-          setTimeout(() => setShowReading(true), 650)
+          setTimeout(() => setShowReading(true), 700)
         }, 300)
-      }, 650)
+      }, 5000)
     } else {
       if (selectedCards.includes(i)) return
       const next = [...selectedCards, i]
@@ -327,7 +327,9 @@ export default function CardSelectionOverlay({
                     borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     transition: 'border-color 0.3s', zIndex: 5, overflow: 'hidden',
                   }}>
-                    {selectedCard === null && (
+                    {selectedCard !== null ? (
+                      <div style={{ width: '100%', height: '100%' }}><CardBack /></div>
+                    ) : (
                       <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 13.5, color: 'rgba(255,255,255,0.2)', textAlign: 'center', letterSpacing: -0.41, width: 80, lineHeight: 1.4, margin: 0 }}>
                         Tap on a card to get reading
                       </p>
@@ -448,8 +450,8 @@ export default function CardSelectionOverlay({
                   {/* Card — compact size to leave generous room for reading text */}
                   <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'center', paddingBottom: 10, zIndex: 2 }}>
                     <div style={{
-                      width: 138,
-                      height: 207,
+                      width: 198,
+                      height: 297,
                       perspective: 900,
                     }}>
                       <div style={{
