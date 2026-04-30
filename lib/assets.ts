@@ -13,9 +13,9 @@ export const ASSETS = {
   vedaAvatar: '/veda-avatar.svg',
 
   // Chat bar icons
-  plusIcon: 'https://www.figma.com/api/mcp/asset/e8e46eca-d9ec-4417-8a8e-9b8cd1fc055f',
-  tarotPillIcon: 'https://www.figma.com/api/mcp/asset/13fcd0e0-3f66-4048-b2d9-b9ab7d69f0cf',
-  horoscopePillIcon: 'https://www.figma.com/api/mcp/asset/d3f4ed24-e2cf-46bb-8d26-a3a3524e2343',
+  plusIcon: '/plus-icon.svg',
+  tarotPillIcon: '/tarot-icon.svg',
+  horoscopePillIcon: '/horoscope-icon.svg',
 
   // Home cards decorations
   ellipse48: 'https://www.figma.com/api/mcp/asset/44639892-761e-49d1-b2b0-3641142f3633',

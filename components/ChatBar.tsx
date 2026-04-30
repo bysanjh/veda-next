@@ -2,9 +2,9 @@
 import { useState } from 'react'
 
 const A = {
-  plusIcon:      'https://www.figma.com/api/mcp/asset/bafe9bca-5409-4a0d-bc9d-377386a95ebb',
-  tarotIcon:     'https://www.figma.com/api/mcp/asset/f3a87d25-0bf5-4bb7-b0d2-b601d1ea45bb',
-  horoIcon:      'https://www.figma.com/api/mcp/asset/5eb9bb83-a970-442b-bc03-c7a214622713',
+  plusIcon:      '/plus-icon.svg',
+  tarotIcon:     '/tarot-icon.svg',
+  horoIcon:      '/horoscope-icon.svg',
   sendIcon:      'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
   vedaAvatar:    '/veda-avatar.svg',
   opheliaAvatar: 'https://www.figma.com/api/mcp/asset/3d99c934-3e4e-41eb-ab74-936c58323d64',
