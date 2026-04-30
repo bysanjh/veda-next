@@ -1,14 +1,14 @@
 'use client'
 
 const A = {
-  logoGroup:    'https://www.figma.com/api/mcp/asset/da0cc5b5-dd7a-44ee-a43a-d00a199fc288',
+  logoGroup:    '/logo-group.svg',
   starfield:    'https://www.figma.com/api/mcp/asset/a1678bb0-79c9-432b-90f5-6cd6d125c34d',
   ellipse16:    'https://www.figma.com/api/mcp/asset/2c5b8e28-1dfa-4384-b181-61050898c6b3',
   ellipse17:    'https://www.figma.com/api/mcp/asset/487f9ab9-d773-42c0-a6ac-5652a4596272',
   ellipse18:    'https://www.figma.com/api/mcp/asset/d9b133a8-52d1-4567-a73b-064c985ca849',
   star:         '/star.svg',
-  googleIcon:   '/google-icon.png',
-  facebookIcon: '/facebook-icon.png',
+  googleIcon:   '/google-icon.svg',
+  facebookIcon: '/facebook-icon.svg',
 }
 
 interface LoginScreenProps {
