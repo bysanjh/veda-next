@@ -222,9 +222,9 @@ const THUMB_H   = 142
 const PAGER_W   = 354
 
 const CARD_READINGS = [
-  { label: 'Moon (Past)',       body: 'Confusion and doubt clouded your judgment.' },
-  { label: 'Empress (Present)', body: "You're stepping into clarity and self-trust." },
-  { label: 'Tower (Future)',    body: 'A shake-up clears the way for something stronger.' },
+  { label: 'Jupiter (Past)',   body: 'A period of expansion and abundance shaped your foundation. Growth and optimism carried you to where you stand today.' },
+  { label: 'Moon (Present)',   body: 'Confusion and illusion cloud the present moment. Trust your intuition over what appears on the surface — the truth is beneath.' },
+  { label: 'Mars (Future)',    body: 'Bold action and decisive energy lie ahead. A challenge will demand courage — step into it with conviction.' },
 ]
 const CARD_IMAGES = [RA.jupiterCard, RA.moonCard3, RA.marsCard]
 
@@ -251,6 +251,7 @@ export default function CardSelectionOverlay({
   const [cardFlipped, setCardFlipped]   = useState(false)
   const [showReading, setShowReading]   = useState(false)
   const [activeReading, setActiveReading] = useState(0)
+  const [flippedCards, setFlippedCards] = useState<boolean[]>([false, false, false])
 
   const isDragging      = useRef(false)
   const dragStart       = useRef(0)
@@ -289,7 +290,12 @@ export default function CardSelectionOverlay({
       setSelectedCards(next)
       if (next.length === 3) {
         onCardSelected()
-        setTimeout(() => setPhase(PHASE.REVEAL), 700)
+        setTimeout(() => {
+          setPhase(PHASE.REVEAL)
+          setTimeout(() => setFlippedCards([true, false, false]), 300)
+          setTimeout(() => setFlippedCards([true, true, false]), 700)
+          setTimeout(() => setFlippedCards([true, true, true]), 1100)
+        }, 700)
       }
     }
   }
@@ -608,7 +614,6 @@ export default function CardSelectionOverlay({
                   <div style={{ position: 'absolute', top: 92, left: 0, right: 0, height: 186 }}>
                     {CARD_IMAGES.map((src, i) => {
                       const slot = (i - activeReading + 3) % 3
-                      // slot 0=center, slot 1=right (+117px), slot 2=left (-117px)
                       const xOff = slot === 0 ? 0 : slot === 1 ? 117 : -117
                       const isCenter = slot === 0
                       return (
@@ -616,19 +621,37 @@ export default function CardSelectionOverlay({
                           key={i}
                           style={{
                             position: 'absolute', left: '50%', marginLeft: -61.5, top: 0,
-                            width: 123, height: 184, borderRadius: 8, overflow: 'hidden', cursor: 'pointer',
+                            width: 123, height: 184, cursor: 'pointer',
                             zIndex: isCenter ? 2 : 1,
-                            boxShadow: isCenter ? '19px 0 36px rgba(0,0,0,0.4), -19px 0 36px rgba(0,0,0,0.4)' : 'none',
+                            perspective: 900,
                           }}
                           animate={{ x: xOff }}
                           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                           onClick={() => setActiveReading(i)}
                         >
-                          <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                          {/* Flip container */}
+                          <div style={{
+                            width: '100%', height: '100%', position: 'relative',
+                            transformStyle: 'preserve-3d',
+                            transform: flippedCards[i] ? 'rotateY(0deg)' : 'rotateY(180deg)',
+                            transition: 'transform 0.7s cubic-bezier(0.4,0,0.2,1)',
+                            borderRadius: 8,
+                            boxShadow: isCenter ? '19px 0 36px rgba(0,0,0,0.4), -19px 0 36px rgba(0,0,0,0.4)' : 'none',
+                          }}>
+                            {/* Front — card face */}
+                            <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', borderRadius: 8, overflow: 'hidden' } as React.CSSProperties}>
+                              <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            </div>
+                            {/* Back — card back */}
+                            <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)', borderRadius: 8, overflow: 'hidden' } as React.CSSProperties}>
+                              <CardBack />
+                            </div>
+                          </div>
+                          {/* Dim overlay for non-center cards */}
                           <motion.div
                             animate={{ opacity: isCenter ? 0 : 1 }}
                             transition={{ duration: 0.2 }}
-                            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', borderRadius: 8 }}
+                            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', borderRadius: 8, pointerEvents: 'none' }}
                           />
                         </motion.div>
                       )
