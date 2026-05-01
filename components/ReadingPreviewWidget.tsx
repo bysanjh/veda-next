@@ -16,19 +16,15 @@ export default function ReadingPreviewWidget({
   onViewReading,
   mode = 'yes_no',
 }: ReadingPreviewWidgetProps) {
-  const summarySnippet = summary.length > 44 ? summary.slice(0, 44).trimEnd() + '…' : summary
-  const imgSrc = mode === 'three_card' ? '/tarot-reading-card.jpg' : cardImageSrc
-  const imgStyle: React.CSSProperties = mode === 'three_card'
-    ? { position: 'absolute', left: 0, top: 0, width: 100, height: '100%', objectFit: 'cover', objectPosition: 'center', display: 'block', zIndex: 2 }
-    : { position: 'absolute', left: 8, top: 8, width: 74, height: 111, objectFit: 'cover', display: 'block', borderRadius: 4, zIndex: 2 }
-  const textLeft = mode === 'yes_no' ? 90 : 108
+  const summarySnippet = summary.length > 60 ? summary.slice(0, 60).trimEnd() + '…' : summary
 
   return (
     <button
       onClick={onViewReading}
       className="msg-in"
       style={{
-        position: 'relative',
+        display: 'flex',
+        alignItems: 'stretch',
         background: '#372e6a',
         height: 84,
         width: '100%',
@@ -36,37 +32,62 @@ export default function ReadingPreviewWidget({
         overflow: 'hidden',
         border: 'none',
         cursor: 'pointer',
-        display: 'block',
+        padding: 0,
         textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      {/* Card image — rendered first so text/button sit above via zIndex */}
-      <img src={imgSrc} alt="" style={imgStyle} />
-
-      {/* Dark overlay */}
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(2,2,2,0.27)', zIndex: 3, pointerEvents: 'none' }} />
+      {/* Left image */}
+      <img
+        src={mode === 'three_card' ? '/tarot-reading-card.jpg' : cardImageSrc}
+        alt=""
+        style={{
+          width: mode === 'three_card' ? 100 : 68,
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          flexShrink: 0,
+          display: 'block',
+        }}
+      />
 
       {/* Text */}
       <div style={{
-        position: 'absolute', left: textLeft, top: '50%', transform: 'translateY(-50%)',
-        width: 118, display: 'flex', flexDirection: 'column', gap: 4, zIndex: 4,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 4,
+        padding: '0 10px',
+        minWidth: 0,
       }}>
-        <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 14, fontWeight: 400, color: 'white', letterSpacing: '-0.7px', lineHeight: 0.8, margin: 0 }}>
+        <p style={{
+          fontFamily: 'var(--font-roboto)', fontSize: 14, fontWeight: 400,
+          color: 'white', letterSpacing: '-0.7px', lineHeight: 1.1, margin: 0,
+        }}>
           {verdict}
         </p>
-        <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 12, fontWeight: 400, color: 'rgba(255,255,255,0.49)', letterSpacing: '-0.36px', lineHeight: 'normal', margin: 0 }}>
+        <p style={{
+          fontFamily: 'var(--font-roboto)', fontSize: 12, fontWeight: 400,
+          color: 'rgba(255,255,255,0.49)', letterSpacing: '-0.36px', lineHeight: 1.3, margin: 0,
+        }}>
           {summarySnippet}
         </p>
       </div>
 
       {/* View Reading button */}
       <div style={{
-        position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)',
-        border: '1px solid rgba(255,255,255,0.12)', borderRadius: 4, padding: '10px 18px',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 4,
+        flexShrink: 0,
+        alignSelf: 'center',
+        marginRight: 14,
+        border: '1px solid rgba(255,255,255,0.22)',
+        borderRadius: 6,
+        padding: '9px 14px',
       }}>
-        <p style={{ fontFamily: 'var(--font-roboto)', fontSize: 14, fontWeight: 400, color: 'white', letterSpacing: '-0.42px', lineHeight: 'normal', margin: 0, whiteSpace: 'nowrap' }}>
+        <p style={{
+          fontFamily: 'var(--font-roboto)', fontSize: 13, fontWeight: 400,
+          color: 'white', letterSpacing: '-0.4px', lineHeight: 'normal', margin: 0, whiteSpace: 'nowrap',
+        }}>
           View Reading
         </p>
       </div>
