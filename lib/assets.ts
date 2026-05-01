@@ -4,7 +4,7 @@
 
 export const ASSETS = {
   // Backgrounds
-  starfield: 'https://www.figma.com/api/mcp/asset/b7b69308-3fc6-4180-9f40-f70992b45f67',
+  starfield: '/hero-bg.jpg',
 
   // Header / Logo
   logoBadge: 'https://www.figma.com/api/mcp/asset/5ff5010c-b868-4116-8bb1-e1675c4bbd5b',
