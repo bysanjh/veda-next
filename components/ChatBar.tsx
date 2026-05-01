@@ -5,7 +5,7 @@ const A = {
   plusIcon:      '/plus-icon.svg',
   tarotIcon:     '/tarot-icon.svg',
   horoIcon:      '/horoscope-icon.svg',
-  sendIcon:      'https://www.figma.com/api/mcp/asset/bff61471-3f6d-45c3-a795-33de005d5539',
+  sendIcon:      '/arrow-up.svg',
   vedaAvatar:    '/veda-avatar.svg',
   opheliaAvatar: '/ophelia-avatar.svg',
 }
