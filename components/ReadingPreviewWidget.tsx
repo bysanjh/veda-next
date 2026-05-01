@@ -18,6 +18,17 @@ export default function ReadingPreviewWidget({
 }: ReadingPreviewWidgetProps) {
   const summarySnippet = summary.length > 60 ? summary.slice(0, 60).trimEnd() + '…' : summary
 
+  if (mode === 'three_card') {
+    return (
+      <img
+        src="/tarot-reading-card.jpg"
+        alt="Your 3 card reading"
+        className="msg-in"
+        style={{ width: '100%', borderRadius: 8, display: 'block' }}
+      />
+    )
+  }
+
   return (
     <button
       onClick={onViewReading}
@@ -39,10 +50,10 @@ export default function ReadingPreviewWidget({
     >
       {/* Left image */}
       <img
-        src={mode === 'three_card' ? '/tarot-reading-card.jpg' : cardImageSrc}
+        src={cardImageSrc}
         alt=""
         style={{
-          width: mode === 'three_card' ? 100 : 68,
+          width: 68,
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
