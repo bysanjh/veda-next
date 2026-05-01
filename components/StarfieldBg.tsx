@@ -1,21 +1,8 @@
 'use client'
-import Image from 'next/image'
-import { ASSETS } from '@/lib/assets'
 
 export default function StarfieldBg() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Starfield image */}
-      <div className="absolute inset-0">
-        <Image
-          src={ASSETS.starfield}
-          alt=""
-          fill
-          className="object-cover object-center"
-          unoptimized
-          priority
-        />
-      </div>
       {/* Dark gradient overlay — matches Figma: hard-light blend */}
       <div
         className="absolute inset-0"
