@@ -425,7 +425,9 @@ export default function CardSelectionOverlay({
                           transition: 'border-color 0.3s', overflow: 'hidden',
                         }}>
                           {selectedCards.length > i ? (
-                            <div style={{ width: '100%', height: '100%' }}><CardBack /></div>
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <div style={{ width: THUMB_W, height: THUMB_H }}><CardBack /></div>
+                            </div>
                           ) : (
                             <p style={{ fontFamily: "'Roboto', sans-serif", fontWeight: 400, fontSize: 7.5, color: 'rgba(255,255,255,0.18)', textAlign: 'center', letterSpacing: -0.23, lineHeight: 1.4, margin: 0, padding: '0 8px' }}>
                               {'Tap on a card\nto get reading'}
