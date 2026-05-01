@@ -1,8 +1,20 @@
 'use client'
+import Image from 'next/image'
 
 export default function StarfieldBg() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Starfield image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/starfield.jpg"
+          alt=""
+          fill
+          className="object-cover object-bottom"
+          unoptimized
+          priority
+        />
+      </div>
       {/* Dark gradient overlay — matches Figma: hard-light blend */}
       <div
         className="absolute inset-0"
