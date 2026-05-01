@@ -10,7 +10,7 @@ export default function StarfieldBg() {
           src="/starfield.jpg"
           alt=""
           fill
-          className="object-cover object-bottom"
+          style={{ objectFit: 'fill' }}
           unoptimized
           priority
         />
