@@ -7,7 +7,7 @@ const A = {
   moon:      'https://www.figma.com/api/mcp/asset/b0ae4205-ba72-4694-af13-4be2fe0f059a',
   mars:      'https://www.figma.com/api/mcp/asset/1ea44929-4147-407e-9bfe-28c28f657431',
   closeX:    '/close-x.svg',
-  swipeIcon: 'https://www.figma.com/api/mcp/asset/85919de0-fbe0-437a-8f0d-1fe5564e258f',
+  swipeIcon: '/swipe-icon.svg',
   ellipse50: 'https://www.figma.com/api/mcp/asset/058e5a80-fb43-4199-9179-6f559f177eb3',
   ellipse51: 'https://www.figma.com/api/mcp/asset/4b60622f-9300-4f0c-846c-2b7ea4d55800',
 }
