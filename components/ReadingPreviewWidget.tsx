@@ -1,13 +1,5 @@
 'use client'
 
-const A = {
-  ellipse51:   '/preview-ellipse51.png',
-  ellipse52:   '/preview-ellipse52.png',
-  jupiter:     '/jupiter-card.png',
-  mars:        '/mars-card.png',
-  moon:        '/moon-card-preview.png',
-}
-
 interface ReadingPreviewWidgetProps {
   cardName: string
   verdict: string
@@ -45,16 +37,6 @@ export default function ReadingPreviewWidget({
         WebkitTapHighlightColor: 'transparent',
       }}
     >
-      {/* Ellipse glow — top-left */}
-      <div style={{ position: 'absolute', left: -15, top: -20, width: 130, height: 130, pointerEvents: 'none' }}>
-        <img src={A.ellipse51} alt="" style={{ position: 'absolute', top: '-38.46%', left: '-38.46%', right: '-38.46%', bottom: '-38.46%', display: 'block' }} />
-      </div>
-
-      {/* Ellipse glow — top-right */}
-      <div style={{ position: 'absolute', left: 256, top: -20, width: 137, height: 116, pointerEvents: 'none' }}>
-        <img src={A.ellipse52} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
-      </div>
-
       {/* Dark overlay */}
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(2,2,2,0.27)', pointerEvents: 'none' }} />
 
@@ -116,21 +98,16 @@ export default function ReadingPreviewWidget({
           }}
         />
       ) : (
-        <>
-          <img src={A.jupiter} alt="" style={{
-            position: 'absolute', left: 12, top: 15.8, width: 49, height: 73.5,
-            objectFit: 'cover', pointerEvents: 'none', display: 'block', borderRadius: 3,
-          }} />
-          <img src={A.mars} alt="" style={{
-            position: 'absolute', left: 48, top: 15.8, width: 49, height: 73.5,
-            objectFit: 'cover', pointerEvents: 'none', display: 'block', borderRadius: 3,
-          }} />
-          <img src={A.moon} alt="" style={{
-            position: 'absolute', left: 30, top: 15, width: 49.9, height: 74.9,
-            objectFit: 'cover', pointerEvents: 'none', display: 'block', borderRadius: 3,
-            boxShadow: '7.7px 0px 14.6px rgba(0,0,0,0.4), -7.7px 0px 14.6px rgba(0,0,0,0.4)',
-          }} />
-        </>
+        <img
+          src="/tarot-reading-card.jpg"
+          alt=""
+          style={{
+            position: 'absolute', left: 0, top: 0,
+            width: 100, height: '100%',
+            objectFit: 'cover', objectPosition: 'center',
+            pointerEvents: 'none', display: 'block',
+          }}
+        />
       )}
     </button>
   )
