@@ -131,11 +131,7 @@ export default function ChatBar({
               padding: 5.667, flexShrink: 0,
             }}
           >
-            <div style={{ position: 'relative', width: 22.667, height: 22.667 }}>
-              <div style={{ position: 'absolute', inset: '12.5% 18.75%' }}>
-                <img src={A.sendIcon} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
-              </div>
-            </div>
+            <img src={A.sendIcon} alt="" style={{ width: 27.2, height: 27.2, display: 'block' }} />
           </button>
         )}
 
