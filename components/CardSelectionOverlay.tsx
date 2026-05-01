@@ -68,9 +68,7 @@ type Phase = typeof PHASE[keyof typeof PHASE]
 function CardBack() {
   return (
     <div style={{ width: '100%', height: '100%', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
-      {/* Scale slightly larger so the SVG's right/bottom drop-shadow is clipped,
-          leaving the card rectangle centered and filling the frame */}
-      <img src="/card-back.svg" alt="" style={{ position: 'absolute', top: 0, left: 0, width: '107%', height: '104%' }} />
+      <img src="/card-back.svg" alt="" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '107%', height: '104%' }} />
     </div>
   )
 }
